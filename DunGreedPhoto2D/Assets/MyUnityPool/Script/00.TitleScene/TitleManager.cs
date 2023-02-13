@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class TitleManager : MonoBehaviour
 {
+    public Texture2D cursorImg;
+
     private const int BackGroundCount = 2;
     private const int SubBackGroundCount = 7;
 
@@ -16,17 +17,21 @@ public class TitleManager : MonoBehaviour
     private GameObject birdPreFab;
 
     private List<GameObject> L_backcloud;
-    private List<GameObject> L_midCloud;
     private List<GameObject> L_frontCloud;
-    private List<GameObject> L_birdCloud;
 
+    private List<RollingObj> L_midCloud;
+    private List<RollingObj> L_birdCloud;
+
+    private float scaleX;
+    private float scaleY;
     private GameObject MouseCursor;
-    private float screenX;
-    private float screenY;
 
     void Start()
     {
-        GFunc.FindRootObj("GameObjs").FindChildObj("PopObjs").GetComponent<PopManager>().GameStartPopOff();
+        scaleX = Screen.width / 320.0f;
+        scaleY = Screen.height / 180.0f;
+
+        GFunc.FindRootObj(GFunc.N_GAME_OBJ).FindChildObj(GFunc.N_POP_OBJ).GetComponent<PopManager>().GameStartPopOff();
         SetupObjPool();
         SetMouseCursor();
     }
@@ -35,7 +40,6 @@ public class TitleManager : MonoBehaviour
     {
         RollingBackGround(L_backcloud, 3f);
         RollingBackGround(L_frontCloud, 15f);
-
         MouseCursorOn();
     }
 
@@ -46,7 +50,7 @@ public class TitleManager : MonoBehaviour
 
     private void SetupObjPool()
     {
-        GameObject tempRoot = GFunc.FindRootObj("GameObjs");
+        GameObject tempRoot = GFunc.FindRootObj(GFunc.N_GAME_OBJ);
 
         backCloudPreFab = tempRoot.FindChildObj("BackCloud");
         midCloudPreFab = tempRoot.FindChildObj("MidCloud");
@@ -54,35 +58,40 @@ public class TitleManager : MonoBehaviour
         birdPreFab = tempRoot.FindChildObj("Bird");
 
         L_backcloud = new List<GameObject>();
-        L_midCloud = new List<GameObject>();
         L_frontCloud = new List<GameObject>();
-        L_birdCloud = new List<GameObject>();
+        L_midCloud = new List<RollingObj>();
+        L_birdCloud = new List<RollingObj>();
 
-        GameObject temp = default;
+        GameObject temp1 = default;
 
         for(int i = 0; i < BackGroundCount; i++)
         {
-            temp = Instantiate(backCloudPreFab, backCloudPreFab.transform.parent);
-            temp.RectLocalPosAdd(new Vector3(temp.RectSize().x * i, 0, 0));
-            L_backcloud.Add(temp);
+            temp1 = Instantiate(backCloudPreFab, backCloudPreFab.transform.parent);
+            temp1.RectLocalPosAdd(new Vector3(temp1.RectSize().x * i, 0, 0));
+            L_backcloud.Add(temp1);
 
-            temp = Instantiate(frontCloudPreFab, frontCloudPreFab.transform.parent);
-            temp.RectLocalPosAdd(new Vector3(temp.RectSize().x * i, 0, 0));
-            L_frontCloud.Add(temp);
+            temp1 = Instantiate(frontCloudPreFab, frontCloudPreFab.transform.parent);
+            temp1.RectLocalPosAdd(new Vector3(temp1.RectSize().x * i, 0, 0));
+            L_frontCloud.Add(temp1);
         }
 
-        for(int i = 0; i < SubBackGroundCount; i++)
-        {
-            temp = Instantiate(midCloudPreFab, midCloudPreFab.transform.parent);
-            temp.RectLocalPosSet(new Vector3(0.0f, 0.0f, 1.0f));
-            temp.SetActive(false);
-            L_midCloud.Add(temp);
+        //RollingObj temp2 = default;
+        //for (int i = 0; i < SubBackGroundCount; i++)
+        //{
+        //    temp2 = new RollingObj();
+        //    temp2.obj = Instantiate(midCloudPreFab, midCloudPreFab.transform.parent);
+        //    temp2.obj.RectLocalPosSet(new Vector3(0.0f, 0.0f, 1.0f));
+        //    temp2.obj.SetActive(false);
+        //    temp2.speed = 0;
+        //    L_midCloud.Add(temp2);
 
-            temp = Instantiate(birdPreFab, birdPreFab.transform.parent);
-            temp.RectLocalPosSet(new Vector3(0.0f, 0.0f, 1.0f));
-            temp.SetActive(false);
-            L_birdCloud.Add(temp);
-        }
+        //    temp2 = new RollingObj();
+        //    temp2.obj = Instantiate(birdPreFab, birdPreFab.transform.parent);
+        //    temp2.obj.RectLocalPosSet(new Vector3(0.0f, 0.0f, 1.0f));
+        //    temp2.obj.SetActive(false);
+        //    temp2.speed = 0;
+        //    L_birdCloud.Add(temp2);
+        //}
 
         backCloudPreFab.SetActive(false);
         midCloudPreFab.SetActive(false);
@@ -107,31 +116,58 @@ public class TitleManager : MonoBehaviour
         }
     }
 
-    public void SetMouseCursor()
-    {
-        GameObject tempRoot = GFunc.FindRootObj("GameObjs");
-        MouseCursor = tempRoot.FindChildObj("MouseCursor");
-
-        screenX = Screen.width - 320.0f;
-        screenY = Screen.height - 180.0f;
-    }
-    public void MouseCursorOn()
-    {
-        GameObject tempRoot = GFunc.FindRootObj("GameObjs");
-        GameObject temp222 = tempRoot.FindChildObj("MousePointTxt");
-        temp222.SetTxt(string.Format($"마우스 : {Input.mousePosition.x}, {Input.mousePosition.y}"));
-
-        //Vector3 temp = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        MouseCursor.RectLocalPosSet(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0.0f));
-    }
-
     public void GameStartButton_Clicked()
     {
-        GFunc.FindRootObj("GameObjs").FindChildObj("PopObjs").GetComponent<PopManager>().GameStartPopOn();
+        GFunc.FindRootObj(GFunc.N_GAME_OBJ).FindChildObj(GFunc.N_POP_OBJ).GetComponent<PopManager>().GameStartPopOn();
     }
 
     public void GameQuitButton_Clicked()
     {
         GFunc.QuitGame();
+    }
+
+    public void SetMouseCursor()
+    {
+        Cursor.visible = false;
+
+        GameObject tempRoot = GFunc.FindRootObj(GFunc.N_GAME_OBJ);
+        MouseCursor = tempRoot.FindChildObj("MouseCursor");
+
+        if (MouseCursor.GetComponent<Graphic>())
+            MouseCursor.GetComponent<Graphic>().raycastTarget = false;
+    }
+    public void MouseCursorOn()
+    {
+        MouseCursor.RectLocalPosSet(new Vector3(
+            (Input.mousePosition.x / scaleX) - 160.0f,
+            (Input.mousePosition.y / scaleY) - 90.0f, 0.0f));
+
+        Vector3 MousePos = MouseCursor.RectLocalPos();
+        //4방향 끝지점 막기
+        if (MousePos.x <= -160.0f && MousePos.y >= 90.0f) { MouseCursor.RectLocalPosSet(new Vector3(-160.5f, 89.5f, 0.0f)); }
+        else if (MousePos.x >= 160.0f && MousePos.y >= 90.0f) { MouseCursor.RectLocalPosSet(new Vector3(159.5f, 89.5f, 0.0f)); }
+        else if (MousePos.x <= -160.0f && MousePos.y <= -90.0f) { MouseCursor.RectLocalPosSet(new Vector3(-160.5f, -90.5f, 0.0f)); }
+        else if (MousePos.x >= 160.0f && MousePos.y <= -90.0f) { MouseCursor.RectLocalPosSet(new Vector3(159.5f, -90.5f, 0.0f)); }
+        else if (MousePos.x <= -160.0f) { MouseCursor.RectLocalPosSet(new Vector3(-160.5f, MousePos.y, 0.0f)); }
+        else if (MousePos.x >= 160.0f) { MouseCursor.RectLocalPosSet(new Vector3(159.5f, MousePos.y, 0.0f)); }
+        else if (MousePos.y >= 90.0f) { MouseCursor.RectLocalPosSet(new Vector3(MousePos.x, 89.5f, 0.0f)); }
+        else if (MousePos.y <= -90.0f) { MouseCursor.RectLocalPosSet(new Vector3(MousePos.x, -90.5f, 0.0f)); }
+    }
+}
+
+class RollingObj
+{
+    public RollingObj()
+    {
+        obj = new GameObject();
+    }
+
+    public GameObject obj;
+    public int speed;
+
+    public void SetObj(GameObject obj_, int speed_)
+    {
+        obj = obj_;
+        speed = speed_;
     }
 }
