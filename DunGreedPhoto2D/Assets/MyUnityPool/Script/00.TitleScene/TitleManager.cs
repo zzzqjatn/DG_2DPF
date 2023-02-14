@@ -1,13 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class TitleManager : MonoBehaviour
 {
-    public Texture2D cursorImg;
-
     private const int BackGroundCount = 2;
     private const int SubBackGroundCount = 7;
 
@@ -31,7 +30,7 @@ public class TitleManager : MonoBehaviour
         scaleX = Screen.width / 320.0f;
         scaleY = Screen.height / 180.0f;
 
-        GFunc.FindRootObj(GFunc.N_GAME_OBJ).FindChildObj(GFunc.N_POP_OBJ).GetComponent<PopManager>().GameStartPopOff();
+        GFunc.FindRootObj(GFunc.N_GAME_OBJ).FindChildObj(GFunc.N_POP_OBJ).GetComponent<PopManager>().GameStartPopOff(PopManager.POPUP1);
         SetupObjPool();
         SetMouseCursor();
     }
@@ -75,6 +74,7 @@ public class TitleManager : MonoBehaviour
             L_frontCloud.Add(temp1);
         }
 
+        // 추 후 폴리싱 : 작은 구름, 새 타이틀화면
         //RollingObj temp2 = default;
         //for (int i = 0; i < SubBackGroundCount; i++)
         //{
@@ -118,7 +118,7 @@ public class TitleManager : MonoBehaviour
 
     public void GameStartButton_Clicked()
     {
-        GFunc.FindRootObj(GFunc.N_GAME_OBJ).FindChildObj(GFunc.N_POP_OBJ).GetComponent<PopManager>().GameStartPopOn();
+        GFunc.FindRootObj(GFunc.N_GAME_OBJ).FindChildObj(GFunc.N_POP_OBJ).GetComponent<PopManager>().GameStartPopOn(PopManager.POPUP1);
     }
 
     public void GameQuitButton_Clicked()
