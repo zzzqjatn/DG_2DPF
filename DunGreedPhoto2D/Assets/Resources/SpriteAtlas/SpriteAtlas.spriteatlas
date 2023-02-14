@@ -50,83 +50,143 @@ SpriteAtlas:
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: 0142c450436d80f43b30bf6e07532a33, type: 3}
+  - {fileID: 21300000, guid: fbce7480e66e6a444b9e5f764cd62418, type: 3}
+  - {fileID: 21300000, guid: bcd3f0d0444467944a969163d6ce9746, type: 3}
+  - {fileID: 21300000, guid: 3d6d74d044970fc4db19b0cc4fb81bbc, type: 3}
+  - {fileID: 21300000, guid: daf1bfe01c64ffa43b7deeee438ddbd8, type: 3}
+  - {fileID: 21300000, guid: 9d816c01a6e5c534a8c0307335ca0f24, type: 3}
   - {fileID: 21300000, guid: d42c0df12124c45448778e7f5dba6395, type: 3}
+  - {fileID: 21300000, guid: 285aa302da4804d4a93f4c34063a0005, type: 3}
+  - {fileID: 21300000, guid: f54b4802dca51c94eb26d273c349f56c, type: 3}
+  - {fileID: 21300000, guid: 3af04b02578f4c045a18db8022e649db, type: 3}
+  - {fileID: 21300000, guid: 2ea202124adc89a489d428dc54f6dc40, type: 3}
   - {fileID: 21300000, guid: 25a4e4420eb97954c82d01e5d71cdb19, type: 3}
   - {fileID: 21300000, guid: f80ad842bfc60384f84e836845accd85, type: 3}
-  - {fileID: 21300000, guid: 8e5f7762942a85745b46c7500260497a, type: 3}
+  - {fileID: 21300000, guid: e44c7182d7f213447afd5d4c9e81aef6, type: 3}
+  - {fileID: 21300000, guid: a0e0fb82e5b657d40a0c0f0bc4baa4ab, type: 3}
+  - {fileID: 21300000, guid: 9b0dd6a209ef9e146a8e02dcd4afff93, type: 3}
+  - {fileID: 21300000, guid: 9de7dfb27b9df8f43957198b4bf3751f, type: 3}
   - {fileID: 21300000, guid: 5978083367c0d42448fe88689add91ab, type: 3}
+  - {fileID: 21300000, guid: 5dcefc934a63de14db274ba5c4cd442b, type: 3}
+  - {fileID: 21300000, guid: 6fdbf1b3fce000f43b92ce5b5e53f09e, type: 3}
+  - {fileID: 21300000, guid: 7a738ec36162c75479ae87f7d1bfb7b8, type: 3}
   - {fileID: 21300000, guid: 6f0878f3c8996fb46b5dd7575f83ba29, type: 3}
   - {fileID: 21300000, guid: 846f7af3139c80f40901088fd9d52c34, type: 3}
+  - {fileID: 21300000, guid: 15c39f346b5c3c64eac83a51bdc6a7f2, type: 3}
   - {fileID: 21300000, guid: 8f2d3b943c62af84592c93e81651fc74, type: 3}
   - {fileID: 21300000, guid: 9e4d00e4e0752a446a41bf6ae6b7cede, type: 3}
   - {fileID: 21300000, guid: 17fc29556fdb90140a384b873be78134, type: 3}
+  - {fileID: 21300000, guid: ed3702851f845114ea6d0d35288f21cc, type: 3}
   - {fileID: 21300000, guid: 096aba95da551dd4bb7c3fe6bb40528e, type: 3}
   - {fileID: 21300000, guid: 8e409b95621990d45a5fe1de32ddbdd6, type: 3}
+  - {fileID: 21300000, guid: 90b3e40667a2d074e8a37a500ffa93b1, type: 3}
   - {fileID: 21300000, guid: 499bf5269b5cb134d9ab61ef31deaf51, type: 3}
-  - {fileID: 21300000, guid: 7b18f55634f51cc4fb1dfe28fff7bac7, type: 3}
+  - {fileID: 21300000, guid: ff395236c4961eb4a94b5dbed0633870, type: 3}
+  - {fileID: 21300000, guid: 0bc21e9624a5a2b408fdcb99c2a903cf, type: 3}
   - {fileID: 21300000, guid: 9d0ad7a6a41d1fd46a843c5d5cac8bb7, type: 3}
+  - {fileID: 21300000, guid: e4b4dfd6381a41442904f25af89ed4ec, type: 3}
   - {fileID: 21300000, guid: 69087df649af1f746beaa93067c810c3, type: 3}
-  - {fileID: 21300000, guid: 24e6dd27ee584ea4b859dc6c0acb15b2, type: 3}
   - {fileID: 21300000, guid: 2fb2f3675bb59df4ba1516fc5f8bb1f5, type: 3}
   - {fileID: 21300000, guid: a87213772b7d5c7489b42b48c3fa5a7a, type: 3}
   - {fileID: 21300000, guid: 3a8b18879dfc5a741b2bf0e1b49342fb, type: 3}
-  - {fileID: 21300000, guid: 9a0ab0972d7fe294183be2a49f998b63, type: 3}
   - {fileID: 21300000, guid: 180de397234948b4ea96a8d8d85c034d, type: 3}
   - {fileID: 21300000, guid: 56d494d7142dcf043b8c94d0868d1e5b, type: 3}
   - {fileID: 21300000, guid: 895cebd77508bfa4685a4a56deff386e, type: 3}
+  - {fileID: 21300000, guid: c6217de733e2ab64591d5687c926b954, type: 3}
   - {fileID: 21300000, guid: 0ca7fa08fdb97ff4695b3db32d3dcada, type: 3}
   - {fileID: 21300000, guid: 0ec1561818312c34088e9047e4f444aa, type: 3}
+  - {fileID: 21300000, guid: 5f47f28811c441d428413b934d6dee7d, type: 3}
   - {fileID: 21300000, guid: 1be95ca8b7f9e514fbe80b13423dc71f, type: 3}
   - {fileID: 21300000, guid: 8d217319cbd234d4fbf6edf8ce5d9c44, type: 3}
+  - {fileID: 21300000, guid: bf359c991bb194641b2d918e9c7f444a, type: 3}
   - {fileID: 21300000, guid: bc9b4ad9d9b90814f855a239160eaf8e, type: 3}
-  - {fileID: 21300000, guid: 261d33e99274f5b4c8f6bac71e091773, type: 3}
+  - {fileID: 21300000, guid: ce78923abf9a6c448a94dde36242a767, type: 3}
   - {fileID: 21300000, guid: 2b48b63aec54ddd4caa5594db5681b20, type: 3}
+  - {fileID: 21300000, guid: d7a56e3ab48556747b5cea2c2c6d08c9, type: 3}
   - {fileID: 21300000, guid: e136786a864a8e34cb8624bf0cb7d853, type: 3}
+  - {fileID: 21300000, guid: 64dc3daa31d4764499f54e40ee5a3b32, type: 3}
+  - {fileID: 21300000, guid: f5a70bba2bd1d354aa0b63a887818e92, type: 3}
   - {fileID: 21300000, guid: c2a888ea22bbd3345bd1f00348964327, type: 3}
+  - {fileID: 21300000, guid: d897345b9be7a2f459782dadcdcc80e1, type: 3}
+  - {fileID: 21300000, guid: e98e8aeb11a4da741b8c9076d38b9290, type: 3}
+  - {fileID: 21300000, guid: e97ea09ce8623e34a90afa74867b5dbf, type: 3}
   - {fileID: 21300000, guid: 072db60d0d558c14fa5959a328bdb3cd, type: 3}
   - {fileID: 21300000, guid: d34bdb0d53434dc4bbbaaf4b727bbfb4, type: 3}
+  - {fileID: 21300000, guid: 8bcbed0da9070ff4fa7da698cad1ea1a, type: 3}
   - {fileID: 21300000, guid: 244ab28d96bd46048abc8aad9dd1126c, type: 3}
-  - {fileID: 21300000, guid: 541e0d9d61a867745b59b3afea2a6b0b, type: 3}
+  - {fileID: 21300000, guid: 217fcd9df449aea45b06ba0b6fa06ef4, type: 3}
+  - {fileID: 21300000, guid: 1f5bb38e77247ff49ab55c133992392e, type: 3}
   - {fileID: 21300000, guid: 861b25be4f9d0cd44833412d9c9ea623, type: 3}
   - {fileID: 21300000, guid: 134ed44faf681f944a6e0e3c2ba16596, type: 3}
   m_PackedSpriteNamesToIndex:
+  - CharRun1
+  - CharWalk1
+  - TownBasic_4
+  - DirtToTown_H_0
+  - TownSky_Xmas
+  - TownLayer_Day
   - MidCloud0
+  - Town_TopCenter
+  - Town_RightStair2
+  - TownLayer_Night
+  - CharIdle0
   - Bird2
   - Bird4
-  - CharRun1 #225331
+  - TownBG_Day
+  - CharDie
+  - CharHand (2)
+  - Town_TopLeft
   - BackCloud
+  - CharIdle2
+  - TownBasic_StairL2
+  - Town_RightStair
   - OptionOff_Kor
   - ExitOff_Kor
+  - CharRun6
   - Font Texture
   - SlotText2.EN
   - SlotText3.EN
+  - CharRun4
   - CharIdle1
   - OptionOn_Kor
+  - CharIdle4
   - Bird6
-  - CharRun3 #224041
+  - CharRun7
+  - DirtToTown_H_1
   - SlotDeleteButtonWhite
+  - TownBG_Night
   - FullWindowExitButton
-  - CharIdle3 #220145
   - ExitOn_Kor
   - SlotBase
   - Bird1
-  - CharRun2 #225029
   - FrontCloud
   - BasicCursor
   - SlotText1.EN
+  - CharJump0
   - FullWindowExitButton_Selected
   - Font Texture #241979
+  - Town_TopRight
   - Bird3
   - Font Texture #241966
+  - CharRun5
   - SlotDeleteButton
-  - CharRun0 #224630
+  - TownBasic_StairL
   - SlotBase_Selected
+  - CharRun2
   - Mobile_Tutorial_GuideLeftTop
+  - TownBasic_1
+  - Town_LeftStair
   - MainLogo
+  - Town_LeftStair2
+  - TownBasic_StairR
+  - CharRun0
   - Bird7
   - PlayOff_Kor
+  - CharIdle3
   - Bird5
-  - CharIdle2 #219368
+  - TownBasic_StairR2
+  - CharRun3
   - PlayOn_Kor
   - Bird0
   m_RenderDataMap: {}
