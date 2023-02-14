@@ -17,7 +17,7 @@ public class PlayerCon : MonoBehaviour
     {
         playerRB = gameObject.GetComponent<Rigidbody2D>();
 
-        isJump = false;
+        isJump = true;
         //isDash = false;
         Speed = 5;
         JumpPower = 10;
@@ -80,7 +80,6 @@ public class PlayerCon : MonoBehaviour
     {
         if (collision.transform.name.Equals("wall"))
         {
-            Debug.Log("∂•ø° ¥Í¿Ω");
             isJump = false;
         }
     }
