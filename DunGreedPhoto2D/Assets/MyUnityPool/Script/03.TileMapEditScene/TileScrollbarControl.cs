@@ -10,12 +10,12 @@ public class TileScrollbarControl : MonoBehaviour
     private GameObject Contents;
 
     public GameObject prefabs1;
-    public GameObject prefabs2;
 
     void Start()
     {
-        tilePrefabs = new List<GameObject>();
         Contents = gameObject.FindChildObj("contents");
+        tilePrefabs = new List<GameObject>();
+
         SettingTiles();
     }
 

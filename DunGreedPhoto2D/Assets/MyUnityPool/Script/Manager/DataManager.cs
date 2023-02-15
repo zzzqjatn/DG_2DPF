@@ -86,8 +86,9 @@ public class DataManager : MonoBehaviour
         }
 
         fileName = "slot_";
-        string data = JsonUtility.ToJson(slotData);
+        string data = JsonUtility.ToJson(slotData,true);
         File.WriteAllText(DirectoryPath + "/" + fileName + slotData.slotnum.ToString(), data);
+        print(data);
     }
     public void SlotLoadData(int slotNum)
     {
