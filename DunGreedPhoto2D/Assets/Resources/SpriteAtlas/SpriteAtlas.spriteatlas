@@ -610,7 +610,7 @@ SpriteAtlas:
   - Tile_H7
   - CharDie
   - Wall_Basic_9
-  - CharHand (2)
+  - CharHand
   - Town_TopLeft
   - Task02_Wall_26 #226411
   - Task02_Wall_36 #226444
@@ -764,7 +764,7 @@ SpriteAtlas:
   - SlotText1.EN
   - Task02_Wall_02 #226375
   - Task02_Wall_14 #226393
-  - CharJump0
+  - CharJump
   - InventoryExit
   - Tile_H10
   - FullWindowExitButton_Selected

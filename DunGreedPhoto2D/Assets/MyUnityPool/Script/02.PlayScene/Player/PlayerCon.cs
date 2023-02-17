@@ -28,6 +28,9 @@ public class PlayerCon : MonoBehaviour
 
     private GameObject LeftHand;
 
+    private float dashEffectTime;
+    private bool dashisLeft;
+
     void Start()
     {
         playerRB = gameObject.GetComponent<Rigidbody2D>();
@@ -37,7 +40,7 @@ public class PlayerCon : MonoBehaviour
 
         isGround = false;
         isDash = false;
-        Speed = 5;
+        Speed = 150;
         JumpPower = 10;
         dashPower = 50;
         dashEndTime = 0.08f;
@@ -48,6 +51,9 @@ public class PlayerCon : MonoBehaviour
         dashCoolTime = 0.1f;
 
         dustTime = 0.0f;
+        dashEffectTime = 0.2f;
+
+        dashisLeft = false;
     }
 
     void Update()
@@ -68,11 +74,11 @@ public class PlayerCon : MonoBehaviour
         //기본 움직임 좌우 (하지만 대쉬땐 안되게)
         if (!isDash)
         {
-            Vector3 tempPos = gameObject.transform.position;
+            Vector3 tempPos = gameObject.RectLocalPos();
 
-            gameObject.transform.position = new Vector3(
+            gameObject.RectLocalPosSet(new Vector3(
                 tempPos.x + DirX * Speed * Time.deltaTime,
-                tempPos.y, 0.0f);
+                tempPos.y, 0.0f));
         }
 
         //대쉬 충전 쿨링
@@ -92,7 +98,18 @@ public class PlayerCon : MonoBehaviour
         {   //일정 시간만큼 돌진
             dashPlayTime += Time.deltaTime;
 
-            if(dashPlayTime > dashEndTime)
+            if (dashPlayTime > dashEffectTime)
+            {
+                dashEffectTime += 0.019f;
+
+                if (gameObject.RectLocalRot().y == 0.0f) dashisLeft = false;
+                else if (gameObject.RectLocalRot().y == 1.0f) dashisLeft = true;
+
+                DashEffect.instance.setMirage(
+                    new Vector2(gameObject.RectLocalPos().x, gameObject.RectLocalPos().y), dashisLeft);
+            }
+
+            if (dashPlayTime > dashEndTime)
             {
                 dashPlayTime = 0.0f;
                 playerRB.velocity = Vector2.zero;
@@ -101,13 +118,26 @@ public class PlayerCon : MonoBehaviour
             }
         }
 
+        //공격
         if (Input.GetMouseButtonDown(0))
         {
             //StartCoroutine("LeftPunch", LeftHand.RectLocalPos());
+
+            //Rigidbody2D handRig = LeftHand.GetComponent<Rigidbody2D>();
+            //handRig.velocity = Vector2.zero;
+
+            //Vector2 Dir = new Vector2(LeftHand.RectLocalPos().x, LeftHand.RectLocalPos().y);
+            ////내 마우스 위치
+            //Vector2 mousePos = MouseManager.ScreenMatchSizeMousePos();
+            //// 내 마우스 위치 - 나 위치
+            //Dir = mousePos - Dir;
+
+            //handRig.AddForce(new Vector2(Dir.x, Dir.y).normalized * 50, ForceMode2D.Impulse);
         }
 
         if (Input.GetMouseButtonDown(1) && dashCurrentCount > 0)
         {
+            dashEffectTime = 0.02f;
             dashPlayTime = 0.0f;
             dashCurrentCount -= 1;
             playerRB.velocity = Vector2.zero;
@@ -170,12 +200,12 @@ public class PlayerCon : MonoBehaviour
                 {
                     dustTime = 0.0f;
                     //왼쪽
-                    if (DirX < 0.0f)
+                    if (gameObject.RectLocalRot().y == 1.0f)
                     {
                         MoveEffect.instance.setDust(
                             new Vector2(gameObject.RectLocalPos().x + 7.0f, gameObject.RectLocalPos().y - 5.0f), true);
                     }
-                    else if(DirX > 0.0f)
+                    else if(gameObject.RectLocalRot().y == 0.0f)
                     {
                         MoveEffect.instance.setDust(
                             new Vector2(gameObject.RectLocalPos().x - 7.0f, gameObject.RectLocalPos().y - 5.0f), false);
@@ -200,38 +230,37 @@ public class PlayerCon : MonoBehaviour
         // 내 마우스 위치 - 나 위치
         Dir = mousePos - Dir;
 
-        if (Dir.x > 0)
-            isRight = true;
+        if (gameObject.RectLocalRot().y == 0) { isRight = true; }
 
         handRig.AddForce(new Vector2(Dir.x, Dir.y).normalized * 50, ForceMode2D.Impulse);
         
         yield return new WaitForSeconds(0.05f);
 
-        handRig.velocity = Vector2.zero;
+        //handRig.velocity = Vector2.zero;
 
-        Vector2 tempruslt = new Vector2(7.0f - firstPos.x,-5.0f - firstPos.y);
+        //Vector2 tempruslt = new Vector2(7.0f - firstPos.x,-5.0f - firstPos.y);
 
-        while(true)
-        {
-            handRig.AddForce(new Vector2(tempruslt.x, tempruslt.y).normalized * 1, ForceMode2D.Force);
+        //while(true)
+        //{
+        //    handRig.AddForce(new Vector2(tempruslt.x, tempruslt.y).normalized * 1, ForceMode2D.Force);
 
-            if(isRight == false)
-            {
-                if (LeftHand.RectLocalPos().x < 7.0f)
-                {
-                    break;
-                }
-            }
-            else
-            {
-                if (LeftHand.RectLocalPos().x > 7.0f)
-                {
-                    break;
-                }
-            }
-        }
+        //    if(isRight == false)
+        //    {
+        //        if (LeftHand.RectLocalPos().x < 7.0f)
+        //        {
+        //            break;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (LeftHand.RectLocalPos().x > 7.0f)
+        //        {
+        //            break;
+        //        }
+        //    }
+        //}
 
-        LeftHand.RectLocalPosSet(new Vector3(7.0f, -5.0f, 0.0f));
+        //LeftHand.RectLocalPosSet(new Vector3(7.0f, -5.0f, 0.0f));
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

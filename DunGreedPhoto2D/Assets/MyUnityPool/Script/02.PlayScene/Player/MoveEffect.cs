@@ -26,7 +26,9 @@ public class MoveEffect : MonoBehaviour
     void Start()
     {
         dusts = new List<GameObject>();
+
         dustPreFab = gameObject.FindChildObj("dust");
+
         for (int i = 0; i < DUST_MAX; i++)
         {
             GameObject temp = Instantiate(dustPreFab, gameObject.transform);
