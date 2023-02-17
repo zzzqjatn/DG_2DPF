@@ -7,6 +7,9 @@ using UnityEngine;
 
 public class CamerCon : MonoBehaviour
 {
+    private const float SET_SCREEN_WIDTH = 320.0f;
+    private const float SET_SCREEN_HEIGHT = 180.0f;
+
     private float shakeTime = 0.2f;
     private float shakeSpeed = 5.0f;
     private float shakeAmount = 1.0f;
@@ -24,7 +27,7 @@ public class CamerCon : MonoBehaviour
     void Start()
     {
         camera = GFunc.FindRootObj("Main Camera");
-        target = GFunc.FindRootObj("playerCanVas").FindChildObj("Player").Rect();
+        target = GFunc.FindRootObj("GameObjs").FindChildObj("Player").Rect();
 
         cameraHalfWidth = Camera.main.aspect * Camera.main.orthographicSize;
         cameraHalfHeight = Camera.main.orthographicSize;
@@ -32,15 +35,16 @@ public class CamerCon : MonoBehaviour
 
     private void LateUpdate()
     {
-        //CameraSmoothMove();
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            StartCoroutine(ShakingCamera());
+        }
+        CameraSmoothMove();
     }
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Q))
-        {
-            StartCoroutine(ShakingCamera());
-        }
+
     }
 
     IEnumerator ShakingCamera()
@@ -62,10 +66,29 @@ public class CamerCon : MonoBehaviour
 
     private void CameraSmoothMove()
     {
+        Vector2 tempOffset = ReMatchPos(new Vector2(offset.x, offset.y));
+        Vector2 tempLimitMin = ReMatchPos(new Vector2(limitMinX + cameraHalfWidth, limitMinY + cameraHalfHeight));
+        Vector2 tempLimitMax = ReMatchPos(new Vector2(limitMaxX - cameraHalfWidth, limitMaxY - cameraHalfHeight));
+
         Vector3 desiredPosition = new Vector3(
-            Mathf.Clamp((target.position.x) + offset.x, limitMaxX + cameraHalfWidth, limitMaxX - cameraHalfWidth),
-            Mathf.Clamp((target.position.y) + offset.y, limitMaxY + cameraHalfHeight, limitMaxY - cameraHalfHeight),
+            Mathf.Clamp(target.position.x + tempOffset.x, tempLimitMin.x, tempLimitMax.x) + SET_SCREEN_WIDTH / 2,
+            Mathf.Clamp(target.position.y + tempOffset.y, tempLimitMin.y, tempLimitMax.y) + SET_SCREEN_HEIGHT / 2,
             -10.0f);
-        camera.transform.position = Vector3.Lerp(transform.position, desiredPosition, Time.deltaTime * smoothSpeed);
+        camera.transform.position = Vector3.Lerp(camera.transform.position, desiredPosition, Time.deltaTime * smoothSpeed);
+    }
+
+    private Vector2 ReMatchPos(Vector2 inputPos)
+    {
+        float scaleX, scaleY;
+        Vector2 Result = default;
+
+        scaleX = Screen.width / SET_SCREEN_WIDTH;
+        scaleY = Screen.height / SET_SCREEN_HEIGHT;
+
+        Result = new Vector2(
+            (inputPos.x / scaleX) - SET_SCREEN_WIDTH / 2,
+            (inputPos.y / scaleY) - SET_SCREEN_HEIGHT / 2);
+
+        return Result;
     }
 }
