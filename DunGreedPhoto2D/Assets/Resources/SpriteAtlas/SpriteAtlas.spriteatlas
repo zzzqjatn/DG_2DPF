@@ -320,6 +320,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 5c96a3d8abb84464e820c41bf5a082a2, type: 3}
   - {fileID: 21300000, guid: 16fe8bd8a20ea4244beafdd860722d08, type: 3}
   - {fileID: 21300000, guid: ef29eed81551e044d9f3f6308b83e85a, type: 3}
+  - {fileID: 21300000, guid: 62239fe8022e33a4d972f3946839cc2d, type: 3}
   - {fileID: 21300000, guid: 3f2607f841a9e6948b2856f43c91cb58, type: 3}
   - {fileID: 21300000, guid: 87925a09f6d80d9418adbd9a2660af85, type: 3}
   - {fileID: 21300000, guid: d66e9a093b6256945823abaad54fed72, type: 3}
@@ -790,6 +791,7 @@ SpriteAtlas:
   - Wall_Chain #226205
   - DarkDesertWall10
   - Wall_H4_0
+  - ShootingCursor2
   - Wall_Basic_5
   - Wall_H9 #226138
   - Wall_Ice_09

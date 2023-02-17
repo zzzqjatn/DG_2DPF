@@ -1,12 +1,25 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
-using UnityEditor.U2D.IK;
 using UnityEngine;
 
 public class CamerCon : MonoBehaviour
 {
+    public static CamerCon instance;
+
+    public Vector3 CameraPos;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Destroy(instance.gameObject);
+        }
+    }
+
     private const float SET_SCREEN_WIDTH = 320.0f;
     private const float SET_SCREEN_HEIGHT = 180.0f;
 
@@ -74,7 +87,9 @@ public class CamerCon : MonoBehaviour
             Mathf.Clamp(target.position.x + tempOffset.x, tempLimitMin.x, tempLimitMax.x) + SET_SCREEN_WIDTH / 2,
             Mathf.Clamp(target.position.y + tempOffset.y, tempLimitMin.y, tempLimitMax.y) + SET_SCREEN_HEIGHT / 2,
             -10.0f);
+
         camera.transform.position = Vector3.Lerp(camera.transform.position, desiredPosition, Time.deltaTime * smoothSpeed);
+        CameraPos = camera.transform.position;    //카메라 중점
     }
 
     private Vector2 ReMatchPos(Vector2 inputPos)

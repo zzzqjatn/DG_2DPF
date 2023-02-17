@@ -265,7 +265,7 @@ public class PlayerCon : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform.name.Equals("wall"))
+        if (collision.transform.tag.Equals("Wall"))
         {
             isGround = true;
         }
@@ -273,7 +273,7 @@ public class PlayerCon : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.transform.name.Equals("wall"))
+        if (collision.transform.tag.Equals("Wall"))
         {
             isGround = false;
         }
