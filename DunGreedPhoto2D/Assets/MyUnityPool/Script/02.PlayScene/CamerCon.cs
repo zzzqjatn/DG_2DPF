@@ -46,7 +46,7 @@ public class CamerCon : MonoBehaviour
         cameraHalfHeight = Camera.main.orthographicSize;
     }
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {

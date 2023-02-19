@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-public class dust : MonoBehaviour
+public class Dust : MonoBehaviour
 {
     private Animator dustAni;
     private bool isAlive = false;
