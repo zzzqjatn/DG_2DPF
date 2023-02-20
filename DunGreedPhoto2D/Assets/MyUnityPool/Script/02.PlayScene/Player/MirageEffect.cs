@@ -6,10 +6,10 @@ public class MirageEffect : MonoBehaviour
 {
     public static MirageEffect instance;
 
-    private const int DUST_MAX = 5;
+    private List<GameObject> mirageEffects;
+    private GameObject miragePrefab;
 
-    private List<GameObject> dusts;
-    private GameObject dustPreFab;
+    private const int MIRAGE_MAX = 12;
 
     private void Awake()
     {
@@ -23,35 +23,38 @@ public class MirageEffect : MonoBehaviour
         }
     }
 
+    // Start is called before the first frame update
     void Start()
     {
-        dusts = new List<GameObject>();
+        mirageEffects = new List<GameObject>();
 
-        dustPreFab = gameObject.FindChildObj("dust");
+        miragePrefab = gameObject.FindChildObj("mirage");
 
-        for (int i = 0; i < DUST_MAX; i++)
+        for (int i = 0; i < MIRAGE_MAX; i++)
         {
-            GameObject temp = Instantiate(dustPreFab, gameObject.transform);
+            GameObject temp = Instantiate(miragePrefab, gameObject.transform);
             temp.RectLocalPosSet(new Vector3(0.0f, 0.0f, 0.0f));
             temp.SetActive(false);
-            dusts.Add(temp);
+            mirageEffects.Add(temp);
         }
-        dustPreFab.SetActive(false);
+        miragePrefab.SetActive(false);
     }
 
+    // Update is called once per frame
     void Update()
     {
         
     }
 
-    public void setDust(Vector2 pos, bool isLeft)
+    //Time을 주고 맞춰서 진행
+    public void setMirage(Vector2 pos, bool isLeft)
     {
-        for(int i = 0; i < DUST_MAX; i++)
+        for (int i = 0; i < MIRAGE_MAX; i++)
         {
-            if (dusts[i].activeSelf == false)
+            if (mirageEffects[i].activeSelf == false)
             {
-                dusts[i].SetActive(true);
-                dusts[i].GetComponent<Dust>().Respown(pos, isLeft);
+                mirageEffects[i].SetActive(true);
+                mirageEffects[i].GetComponent<Mirage>().Respown(pos, isLeft);
                 break;
             }
         }

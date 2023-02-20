@@ -1,16 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Player : MonoBehaviour
 {
     private Animator playerAni;
     private Rigidbody2D playerRB;
-    private Collider2D playerLandCollider;
 
-    private bool isGround;
     private bool isDash;
     private bool isJump;
 
@@ -34,25 +32,29 @@ public class Player : MonoBehaviour
 
     private bool isRight;
     private bool isLeft;
-    private bool isUp;
-    private bool isDown;
     private bool isSpaceUp;
     private bool isSpaceDown;
     private bool isRun;
     private bool isRightClick;
 
     private Vector2 Dir;
+    private bool isJumpExit;
 
-    private bool isFalling;
-    private RaycastHit2D raycastHit;
+    private Vector2 boxCastSize = new Vector2(0.4f, 0.05f);
+    private float boxCastMaxDistance = 0.4f;
+
+    private bool isSlope;
+    private Vector2 perp;
+    public float clamAngle;
+    public float MaxAngle = 45;
+
+    public Vector2 perpVelo;
 
     void Start()
     {
         playerRB = gameObject.GetComponent<Rigidbody2D>();
         playerAni = gameObject.GetComponent<Animator>();
-        playerLandCollider = gameObject.GetComponent<Collider2D>();
 
-        isGround = false;
         isDash = false;
         isJump = false;
 
@@ -76,13 +78,15 @@ public class Player : MonoBehaviour
 
         isRight = false;
         isLeft = false;
-        isUp = false;
-        isDown = false;
         isSpaceDown = false;
         isSpaceUp = false;
         isRun = false;
         isRightClick = false;
-        isFalling = false;
+        isJumpExit = false;
+
+        isSlope = false;
+
+        perpVelo = Vector2.zero;
 
         Dir = new Vector2(gameObject.RectLocalPos().x, gameObject.RectLocalPos().y);
     }
@@ -104,7 +108,6 @@ public class Player : MonoBehaviour
         Player_Running();
         Player_DashRunnig();
         Player_AniCon();
-        //LandCheckCollider();
 
         HandPosition();
     }
@@ -120,12 +123,44 @@ public class Player : MonoBehaviour
 
         //대쉬
         Player_Dash();
+
+        playerClam();
     }
 
-    public void LandCheckCollider()
+    public void playerClam()
     {
-            raycastHit = Physics2D.BoxCast(
-                playerLandCollider.bounds.center, playerLandCollider.bounds.size, 0f, Vector2.down, 0.02f, LayerMask.GetMask("Wall"));
+        if (isRun == false && isDash == false && isJump == false)
+        {
+            playerRB.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+        }
+        else
+        {
+            playerRB.constraints = RigidbodyConstraints2D.FreezeRotation;
+        }
+
+        RaycastHit2D hit = Physics2D.Raycast(gameObject.transform.position, Vector2.down, 0.8f, LayerMask.GetMask("Wall"));
+
+        if(hit)
+        {
+            perp = Vector2.Perpendicular(hit.normal).normalized;
+            clamAngle = Vector2.Angle(hit.normal, Vector2.up);
+
+            if (clamAngle != 0)
+                isSlope = true;
+            else
+                isSlope = false;
+
+            if(Dir.x < 0)   //왼
+            {
+                Debug.DrawLine(hit.point, hit.point + hit.normal, Color.red);
+                Debug.DrawLine(hit.point, hit.point + perp, Color.blue);
+            }
+            else if (Dir.x > 0) //오
+            {
+                Debug.DrawLine(hit.point, hit.point + hit.normal, Color.red);
+                Debug.DrawLine(hit.point, hit.point + perp * -1, Color.blue);
+            }
+        }
     }
 
     public void playerKeyControl()
@@ -133,27 +168,18 @@ public class Player : MonoBehaviour
         //방향키
         if (Input.GetKey(KeyCode.A))
         {
-            if(isDash == false) isLeft = true;
-            if(isGround == true && isDash == false) isRun = true;
+            if (isDash == false) isLeft = true;
+            if (isJump == false && isDash == false) isRun = true;
         }
         else if (Input.GetKey(KeyCode.D))
         {
             if (isDash == false) isRight = true;
-            if (isGround == true && isDash == false) isRun = true;
+            if (isJump == false && isDash == false) isRun = true;
         }
         else isRun = false;
 
-        if (Input.GetKey(KeyCode.W))
-        {
-            isUp = true;
-        }
-        else if (Input.GetKey(KeyCode.S))
-        {
-            isDown = true;
-        }
-
         //점프
-        if (Input.GetKeyDown(KeyCode.Space) && isJump == false)
+        if (Input.GetKeyDown(KeyCode.Space) && IsOnGround())
         {
             isSpaceDown = true;
         }
@@ -176,14 +202,49 @@ public class Player : MonoBehaviour
             if(isLeft == true)
             {
                 isLeft = false;
-                playerRB.velocity = new Vector2(-Speed, playerRB.velocity.y);
+
+                //경사면일때
+                if(isSlope && IsOnGround2() && !isJump && clamAngle < MaxAngle)
+                {
+                    perpVelo = perp * Speed;
+                    playerRB.gravityScale = Mathf.Abs(perpVelo.y);
+
+                    playerRB.velocity = perpVelo;
+                }
+                else if(!isSlope && IsOnGround2() && !isJump)   //평지
+                {
+                    playerRB.gravityScale = 2.0f;
+                    playerRB.velocity = new Vector2(-Speed,0);
+                }
+                else if(isJump)
+                {
+                    playerRB.gravityScale = 2.0f;
+                    playerRB.velocity = new Vector2(-Speed, playerRB.velocity.y);
+                }
             }
             else if (isRight == true)
             {
                 isRight = false;
-                playerRB.velocity = new Vector2(Speed, playerRB.velocity.y);
+
+                //경사면일때
+                if (isSlope && IsOnGround2() && !isJump && clamAngle < MaxAngle)
+                {
+                    perpVelo = perp * -Speed;
+                    playerRB.gravityScale = Mathf.Abs(perpVelo.y);
+
+                    playerRB.velocity = perpVelo;
+                }
+                else if (!isSlope && IsOnGround2() && !isJump)
+                {
+                    playerRB.gravityScale = 2.0f;
+                    playerRB.velocity = new Vector2(Speed, 0);
+                }
+                else if(isJump)
+                {
+                    playerRB.gravityScale = 2.0f;
+                    playerRB.velocity = new Vector2(Speed, playerRB.velocity.y);
+                }
             }
-            else playerRB.velocity = new Vector2(0, playerRB.velocity.y);
         }
     }
 
@@ -202,7 +263,7 @@ public class Player : MonoBehaviour
             playerRB.AddForce(new Vector2(Dir.x, Dir.y).normalized * dashPower, ForceMode2D.Impulse);
             isDash = true;
             isJump = true;
-            isGround = false;
+            isJumpExit = true;
         }
     }
 
@@ -232,11 +293,11 @@ public class Player : MonoBehaviour
 
                 if (gameObject.RectLocalRot().y == 0.0f)
                 {
-                    DashEffect.instance.setMirage(new Vector2(gameObject.RectLocalPos().x, gameObject.RectLocalPos().y), false);
+                    MirageEffect.instance.setMirage(new Vector2(gameObject.RectLocalPos().x, gameObject.RectLocalPos().y), false);
                 }
                 else if (gameObject.RectLocalRot().y == 1.0f)
                 {
-                    DashEffect.instance.setMirage(new Vector2(gameObject.RectLocalPos().x, gameObject.RectLocalPos().y), true);
+                    MirageEffect.instance.setMirage(new Vector2(gameObject.RectLocalPos().x, gameObject.RectLocalPos().y), true);
                 }
             }
 
@@ -246,11 +307,17 @@ public class Player : MonoBehaviour
                 playerRB.velocity = Vector2.zero;
                 playerRB.gravityScale = 2.0f;
                 isDash = false;
-                playerAni.SetBool("IsDash", false);
+
+                if(IsOnGround())
+                {
+                    isJump = false;
+                    isJumpExit = false;
+                }
+                playerAni.SetBool("IsJump", isDash);
             }
             else
             {
-                playerAni.SetBool("IsDash", true);
+                playerAni.SetBool("IsJump", isDash);
             }
         }
     }
@@ -261,21 +328,26 @@ public class Player : MonoBehaviour
         if (isRun == true && isJump == false)
         {
             dustEventTime += Time.deltaTime;
-            if (dustEventTime > 0.6f)
+            if (dustEventTime > 0.4f)
             {
                 dustEventTime = 0.0f;
+
                 //왼쪽
                 if (gameObject.RectLocalRot().y == 1.0f)
                 {
-                    MirageEffect.instance.setDust(
+                    DushEffect.instance.setDust(
                         new Vector2(gameObject.RectLocalPos().x + 7.0f, gameObject.RectLocalPos().y - 5.0f), true);
                 }
                 else if (gameObject.RectLocalRot().y == 0.0f)
                 {
-                    MirageEffect.instance.setDust(
+                    DushEffect.instance.setDust(
                         new Vector2(gameObject.RectLocalPos().x - 7.0f, gameObject.RectLocalPos().y - 5.0f), false);
                 }
             }
+        }
+        else
+        {
+            dustEventTime = 0.0f;
         }
     }
 
@@ -285,7 +357,9 @@ public class Player : MonoBehaviour
         {
             isSpaceDown = false;
             isJump = true;
-            playerRB.AddForce(Vector2.up * JumpPower,ForceMode2D.Impulse);
+            playerRB.velocity = Vector2.zero;
+            playerRB.gravityScale = 2.0f;
+            playerRB.AddForce(Vector2.up * JumpPower, ForceMode2D.Impulse);
         }
     }
 
@@ -296,7 +370,11 @@ public class Player : MonoBehaviour
         if (isSpaceUp == true)
         {
             isSpaceUp = false;
-            playerRB.velocity = new Vector2(playerRB.velocity.x,playerRB.velocity.y * 0.5f);
+
+            if (isJump == true)
+            {
+                playerRB.velocity = new Vector2(playerRB.velocity.x, playerRB.velocity.y * 0.5f);
+            }
         }
     }
 
@@ -319,7 +397,7 @@ public class Player : MonoBehaviour
     public void Player_AniCon()
     {
         //캐릭터 모션
-        playerAni.SetBool("IsGround", isGround);
+        playerAni.SetBool("IsJump", isJump);
         playerAni.SetBool("IsRun", isRun);
     }
 
@@ -398,30 +476,69 @@ public class Player : MonoBehaviour
         {
             if (collision.transform.tag.Equals("Wall"))
             {
-                playerRB.velocity = Vector2.zero;
-                isGround = true;
-                isJump = false;
-            }
-        }
-    }
-
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (isDash == false)
-        {
-            if (collision.transform.tag.Equals("Wall"))
-            {
-                isGround = true;
-                isJump = false;
+                if (isJumpExit == true && IsOnGround())
+                {
+                    isJump = false;
+                    isJumpExit = false;
+                }
             }
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.transform.tag.Equals("Wall"))
+        if(collision.transform.tag.Equals("Wall"))
         {
-            isGround = false;
+            if (isJump == true)
+            {
+                isJumpExit = true;
+            }
+            else if(isJump == false)
+            {
+                if(!IsOnGround())
+                {
+                    Debug.Log("점프로 탈출");
+                    isJump = true;
+                    isJumpExit = true;
+                }
+            }
+            //else if(isRun == true)
+            //{
+            //    if (!IsOnGround())
+            //    {
+            //        Debug.Log("달리기로 탈출");
+            //        isRun = false;
+            //        isJump = true;
+            //        isJumpExit = true;
+            //    }
+            //}
         }
     }
+   
+    private bool IsOnGround()
+    {
+        RaycastHit2D raycastHit = Physics2D.BoxCast(transform.position, boxCastSize, 0f, Vector2.down, boxCastMaxDistance, LayerMask.GetMask("Wall"));
+        return (raycastHit.collider != null);
+    }
+    private bool IsOnGround2()
+    {
+        RaycastHit2D raycastHit = Physics2D.BoxCast(transform.position, boxCastSize, 0f, Vector2.down, 1.0f, LayerMask.GetMask("Wall"));
+        return (raycastHit.collider != null);
+    }
+
+    //void OnDrawGizmos()
+    //{
+    //    RaycastHit2D raycastHit = Physics2D.BoxCast(transform.position, boxCastSize, 0f, Vector2.down, boxCastMaxDistance, LayerMask.GetMask("Wall"));
+
+    //    Gizmos.color = Color.red;
+    //    if (raycastHit.collider != null)
+    //    {
+    //        Gizmos.DrawRay(transform.position, Vector2.down * raycastHit.distance);
+    //        Gizmos.DrawWireCube(transform.position + Vector3.down * raycastHit.distance, boxCastSize);
+    //    }
+    //    else
+    //    {
+    //        Gizmos.DrawRay(transform.position, Vector2.down * boxCastMaxDistance);
+    //    }
+    //}
 }
