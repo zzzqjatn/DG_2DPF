@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -8,9 +9,10 @@ public class Player : MonoBehaviour
 {
     private Animator playerAni;
     private Rigidbody2D playerRB;
+    private GameObject playerGnd;
 
-    private bool isDash;
-    private bool isJump;
+    public bool isDash;
+    public bool isJump;
 
     private int dashCurrentCount;
     private int dashMaxCount;
@@ -34,26 +36,29 @@ public class Player : MonoBehaviour
     private bool isLeft;
     private bool isSpaceUp;
     private bool isSpaceDown;
-    private bool isRun;
     private bool isRightClick;
 
     private Vector2 Dir;
-    private bool isJumpExit;
+    public bool isRun;
+    public bool isJumpExit;
 
-    private Vector2 boxCastSize = new Vector2(0.4f, 0.05f);
-    private float boxCastMaxDistance = 0.4f;
+    private Vector2 boxCastSize = new Vector2(0.3f, 0.05f);
+    private float boxCastMaxDistance = 0.35f;
 
-    private bool isSlope;
+    public bool isSlope;
     private Vector2 perp;
     public float clamAngle;
     public float MaxAngle = 45;
 
     public Vector2 perpVelo;
 
+    public string nowplateformName;
+
     void Start()
     {
         playerRB = gameObject.GetComponent<Rigidbody2D>();
         playerAni = gameObject.GetComponent<Animator>();
+        playerGnd = gameObject.FindChildObj("Gnd");
 
         isDash = false;
         isJump = false;
@@ -138,8 +143,10 @@ public class Player : MonoBehaviour
             playerRB.constraints = RigidbodyConstraints2D.FreezeRotation;
         }
 
-        RaycastHit2D hit = Physics2D.Raycast(gameObject.transform.position, Vector2.down, 0.8f, LayerMask.GetMask("Wall"));
+        float searchDistance = 0.48f;
+        RaycastHit2D hit = Physics2D.Raycast(gameObject.transform.position, Vector2.down, searchDistance, LayerMask.GetMask(nowplateformName));
 
+        //아래 충돌하면 (바닥이 있으면)
         if(hit)
         {
             perp = Vector2.Perpendicular(hit.normal).normalized;
@@ -150,16 +157,16 @@ public class Player : MonoBehaviour
             else
                 isSlope = false;
 
-            if(Dir.x < 0)   //왼
-            {
-                Debug.DrawLine(hit.point, hit.point + hit.normal, Color.red);
-                Debug.DrawLine(hit.point, hit.point + perp, Color.blue);
-            }
-            else if (Dir.x > 0) //오
-            {
-                Debug.DrawLine(hit.point, hit.point + hit.normal, Color.red);
-                Debug.DrawLine(hit.point, hit.point + perp * -1, Color.blue);
-            }
+            //if(Dir.x < 0)   //왼
+            //{
+            //    Debug.DrawLine(hit.point, hit.point + hit.normal, Color.red);
+            //    Debug.DrawLine(hit.point, hit.point + perp, Color.blue);
+            //}
+            //else if (Dir.x > 0) //오
+            //{
+            //    Debug.DrawLine(hit.point, hit.point + hit.normal, Color.red);
+            //    Debug.DrawLine(hit.point, hit.point + perp * -1, Color.blue);
+            //}
         }
     }
 
@@ -204,22 +211,28 @@ public class Player : MonoBehaviour
                 isLeft = false;
 
                 //경사면일때
-                if(isSlope && IsOnGround2() && !isJump && clamAngle < MaxAngle)
+                if(isSlope)
                 {
-                    perpVelo = perp * Speed;
-                    playerRB.gravityScale = Mathf.Abs(perpVelo.y);
+                    if (IsOnGround2() && !isJump && clamAngle < MaxAngle)
+                    {
+                        perpVelo = perp * Speed;
+                        playerRB.gravityScale = Mathf.Abs(perpVelo.y);
 
-                    playerRB.velocity = perpVelo;
+                        playerRB.velocity = perpVelo;
+                    }
                 }
-                else if(!isSlope && IsOnGround2() && !isJump)   //평지
+                else if(!isSlope)
                 {
                     playerRB.gravityScale = 2.0f;
-                    playerRB.velocity = new Vector2(-Speed,0);
-                }
-                else if(isJump)
-                {
-                    playerRB.gravityScale = 2.0f;
-                    playerRB.velocity = new Vector2(-Speed, playerRB.velocity.y);
+
+                    if (IsOnGround() && !isJump) //평지
+                    {
+                        playerRB.velocity = new Vector2(-Speed, 0);
+                    }
+                    else if (!IsOnGround())
+                    {
+                        playerRB.velocity = new Vector2(-Speed, playerRB.velocity.y);
+                    }
                 }
             }
             else if (isRight == true)
@@ -227,22 +240,28 @@ public class Player : MonoBehaviour
                 isRight = false;
 
                 //경사면일때
-                if (isSlope && IsOnGround2() && !isJump && clamAngle < MaxAngle)
+                if (isSlope)
                 {
-                    perpVelo = perp * -Speed;
-                    playerRB.gravityScale = Mathf.Abs(perpVelo.y);
+                    if (IsOnGround2() && !isJump && clamAngle < MaxAngle)
+                    {
+                        perpVelo = perp * -Speed;
+                        playerRB.gravityScale = Mathf.Abs(perpVelo.y);
 
-                    playerRB.velocity = perpVelo;
+                        playerRB.velocity = perpVelo;
+                    }
                 }
-                else if (!isSlope && IsOnGround2() && !isJump)
+                else if (!isSlope)
                 {
                     playerRB.gravityScale = 2.0f;
-                    playerRB.velocity = new Vector2(Speed, 0);
-                }
-                else if(isJump)
-                {
-                    playerRB.gravityScale = 2.0f;
-                    playerRB.velocity = new Vector2(Speed, playerRB.velocity.y);
+
+                    if (IsOnGround() && !isJump) //평지
+                    {
+                        playerRB.velocity = new Vector2(Speed, 0);
+                    }
+                    else if (!IsOnGround())
+                    {
+                        playerRB.velocity = new Vector2(Speed, playerRB.velocity.y);
+                    }
                 }
             }
         }
@@ -370,7 +389,6 @@ public class Player : MonoBehaviour
         if (isSpaceUp == true)
         {
             isSpaceUp = false;
-
             if (isJump == true)
             {
                 playerRB.velocity = new Vector2(playerRB.velocity.x, playerRB.velocity.y * 0.5f);
@@ -474,9 +492,9 @@ public class Player : MonoBehaviour
     {
         if (isDash == false)
         {
-            if (collision.transform.tag.Equals("Wall"))
+            if (collision.transform.tag.Equals("Ground") || collision.transform.tag.Equals("Wall"))
             {
-                if (isJumpExit == true && IsOnGround())
+                if (isJumpExit == true && IsOnGround(collision.transform.tag))
                 {
                     isJump = false;
                     isJumpExit = false;
@@ -487,42 +505,57 @@ public class Player : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if(collision.transform.tag.Equals("Wall"))
+        if(collision.transform.tag.Equals("Ground") || collision.transform.tag.Equals("Wall"))
         {
+            if (isRun == true)
+            {
+                if (!IsOnGround(collision.transform.tag))
+                {
+                    Debug.Log("달리기로 탈출");
+                    isRun = false;
+                    isJump = true;
+                    isJumpExit = true;
+                }
+            }
+            
             if (isJump == true)
             {
                 isJumpExit = true;
             }
-            else if(isJump == false)
+            else if (isJump == false)
             {
-                if(!IsOnGround())
+                if (!IsOnGround(collision.transform.tag))
                 {
                     Debug.Log("점프로 탈출");
                     isJump = true;
                     isJumpExit = true;
                 }
             }
-            //else if(isRun == true)
-            //{
-            //    if (!IsOnGround())
-            //    {
-            //        Debug.Log("달리기로 탈출");
-            //        isRun = false;
-            //        isJump = true;
-            //        isJumpExit = true;
-            //    }
-            //}
         }
     }
-   
+    private bool IsOnGround(string tagName)
+    {
+        nowplateformName = tagName;
+        RaycastHit2D raycastHit = Physics2D.BoxCast(transform.position, boxCastSize, 0f, Vector2.down, boxCastMaxDistance, LayerMask.GetMask(tagName));
+        return (raycastHit.collider != null);
+    }
+
+    private bool IsOnGround2(string tagName)  //긴 바닥체크 (경사선은 길게 체크해야 내려가면서 체크가 가능하기 때문에)
+    {
+        nowplateformName = tagName;
+        RaycastHit2D raycastHit = Physics2D.BoxCast(transform.position, boxCastSize, 0f, Vector2.down, 0.5f, LayerMask.GetMask(tagName));
+        return (raycastHit.collider != null);
+    }
+
     private bool IsOnGround()
     {
         RaycastHit2D raycastHit = Physics2D.BoxCast(transform.position, boxCastSize, 0f, Vector2.down, boxCastMaxDistance, LayerMask.GetMask("Wall"));
         return (raycastHit.collider != null);
     }
-    private bool IsOnGround2()
+
+    private bool IsOnGround2()  //긴 바닥체크 (경사선은 길게 체크해야 내려가면서 체크가 가능하기 때문에)
     {
-        RaycastHit2D raycastHit = Physics2D.BoxCast(transform.position, boxCastSize, 0f, Vector2.down, 1.0f, LayerMask.GetMask("Wall"));
+        RaycastHit2D raycastHit = Physics2D.BoxCast(transform.position, boxCastSize, 0f, Vector2.down, 0.5f, LayerMask.GetMask("Wall"));
         return (raycastHit.collider != null);
     }
 
