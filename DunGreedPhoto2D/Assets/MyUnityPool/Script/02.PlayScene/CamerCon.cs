@@ -40,7 +40,7 @@ public class CamerCon : MonoBehaviour
     void Start()
     {
         camera = GFunc.FindRootObj("Main Camera");
-        target = GFunc.FindRootObj("GameObjs").FindChildObj("Player").Rect();
+        target = GFunc.FindRootObj("Playercanvas").FindChildObj("Player").Rect();
 
         cameraHalfWidth = Camera.main.aspect * Camera.main.orthographicSize;
         cameraHalfHeight = Camera.main.orthographicSize;

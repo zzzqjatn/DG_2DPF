@@ -529,6 +529,7 @@ public class Player : MonoBehaviour
             {
                 if (isJumpExit == true && IsOnGround())
                 {
+                    //playerRB.velocity = Vector2.zero;
                     isJump = false;
                     isJumpExit = false;
                 }
@@ -556,7 +557,7 @@ public class Player : MonoBehaviour
             {
                 if (!IsOnGround())
                 {
-                    Debug.Log("달리기로 탈출");
+                    //playerRB.velocity = Vector2.zero;
                     isRun = false;
                     isJump = true;
                     isJumpExit = true;
@@ -571,7 +572,7 @@ public class Player : MonoBehaviour
             {
                 if (!IsOnGround())
                 {
-                    Debug.Log("점프로 탈출");
+                    //playerRB.velocity = Vector2.zero;
                     isJump = true;
                     isJumpExit = true;
                 }

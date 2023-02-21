@@ -394,6 +394,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: f5a70bba2bd1d354aa0b63a887818e92, type: 3}
   - {fileID: 21300000, guid: fb908dba35fdc9944a3ddb7747a53240, type: 3}
   - {fileID: 21300000, guid: 8cc9d1ca61815d442a5117729dcda36a, type: 3}
+  - {fileID: 21300000, guid: 43d68ecaf32271949b1cfd3d6d7413d4, type: 3}
   - {fileID: 21300000, guid: a49042da4264cd44c870bf96463b883f, type: 3}
   - {fileID: 21300000, guid: b91aa2ea1cfd3b94685533aefd115f63, type: 3}
   - {fileID: 21300000, guid: c2a888ea22bbd3345bd1f00348964327, type: 3}
@@ -892,6 +893,7 @@ SpriteAtlas:
   - Town_LeftStair
   - Wall_Type2_2
   - Task02_Wall_12
+  - Keyboard_F
   - Tile_Stair_BottomRight
   - Task02_Wall_33 #226441
   - MainLogo
