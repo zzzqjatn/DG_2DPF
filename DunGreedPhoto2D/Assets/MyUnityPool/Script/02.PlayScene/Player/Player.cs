@@ -4,12 +4,14 @@ using Unity.Burst.CompilerServices;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
 {
     private Animator playerAni;
     private Rigidbody2D playerRB;
-    private GameObject playerGnd;
+    private CapsuleCollider2D playerCollider;
+    private BoxCollider2D playerWallCollider;
 
     public bool isDash;
     public bool isJump;
@@ -34,6 +36,7 @@ public class Player : MonoBehaviour
 
     private bool isRight;
     private bool isLeft;
+    public bool isDown;
     private bool isSpaceUp;
     private bool isSpaceDown;
     private bool isRightClick;
@@ -48,17 +51,20 @@ public class Player : MonoBehaviour
     public bool isSlope;
     private Vector2 perp;
     public float clamAngle;
-    public float MaxAngle = 45;
+    public float MaxAngle = 60;
 
     public Vector2 perpVelo;
 
-    public string nowplateformName;
+    private Collider2D IgnoreCollider;
 
     void Start()
     {
         playerRB = gameObject.GetComponent<Rigidbody2D>();
         playerAni = gameObject.GetComponent<Animator>();
-        playerGnd = gameObject.FindChildObj("Gnd");
+        playerCollider = gameObject.GetComponent<CapsuleCollider2D>();
+        playerWallCollider = gameObject.FindChildObj("WallCheck").GetComponent<BoxCollider2D>();
+
+        IgnoreCollider = GFunc.FindRootObj("GameObjs").FindChildObj("Wall").GetComponent<TilemapCollider2D>();
 
         isDash = false;
         isJump = false;
@@ -83,6 +89,7 @@ public class Player : MonoBehaviour
 
         isRight = false;
         isLeft = false;
+        isDown = false;
         isSpaceDown = false;
         isSpaceUp = false;
         isRun = false;
@@ -99,6 +106,18 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         playerMoves();
+
+        if (isDown == true)
+        {
+            Physics2D.IgnoreCollision(IgnoreCollider, playerCollider, true);
+            Physics2D.IgnoreCollision(IgnoreCollider, playerWallCollider, true);
+        }
+
+        if (isDown == false)
+        {
+            Physics2D.IgnoreCollision(IgnoreCollider, playerCollider, false);
+            Physics2D.IgnoreCollision(IgnoreCollider, playerWallCollider, false);
+        }
     }
 
     void Update()
@@ -144,7 +163,7 @@ public class Player : MonoBehaviour
         }
 
         float searchDistance = 0.48f;
-        RaycastHit2D hit = Physics2D.Raycast(gameObject.transform.position, Vector2.down, searchDistance, LayerMask.GetMask(nowplateformName));
+        RaycastHit2D hit = Physics2D.Raycast(gameObject.transform.position, Vector2.down, searchDistance, LayerMask.GetMask("Wall"));
 
         //아래 충돌하면 (바닥이 있으면)
         if(hit)
@@ -152,7 +171,7 @@ public class Player : MonoBehaviour
             perp = Vector2.Perpendicular(hit.normal).normalized;
             clamAngle = Vector2.Angle(hit.normal, Vector2.up);
 
-            if (clamAngle != 0)
+            if (clamAngle != 0 && isDown == false)
                 isSlope = true;
             else
                 isSlope = false;
@@ -184,6 +203,12 @@ public class Player : MonoBehaviour
             if (isJump == false && isDash == false) isRun = true;
         }
         else isRun = false;
+
+        if (Input.GetKey(KeyCode.S))
+        {
+            isDown = true;
+        }
+        else isDown = false;
 
         //점프
         if (Input.GetKeyDown(KeyCode.Space) && IsOnGround())
@@ -220,6 +245,10 @@ public class Player : MonoBehaviour
 
                         playerRB.velocity = perpVelo;
                     }
+                    else if(isJump)
+                    {
+                        playerRB.velocity = new Vector2(-Speed, playerRB.velocity.y);
+                    }
                 }
                 else if(!isSlope)
                 {
@@ -248,6 +277,10 @@ public class Player : MonoBehaviour
                         playerRB.gravityScale = Mathf.Abs(perpVelo.y);
 
                         playerRB.velocity = perpVelo;
+                    }
+                    else if (isJump)
+                    {
+                        playerRB.velocity = new Vector2(Speed, playerRB.velocity.y);
                     }
                 }
                 else if (!isSlope)
@@ -359,7 +392,7 @@ public class Player : MonoBehaviour
                 }
                 else if (gameObject.RectLocalRot().y == 0.0f)
                 {
-                    DushEffect.instance.setDust(
+                    DushEffect.instance.setDust( 
                         new Vector2(gameObject.RectLocalPos().x - 7.0f, gameObject.RectLocalPos().y - 5.0f), false);
                 }
             }
@@ -494,7 +527,7 @@ public class Player : MonoBehaviour
         {
             if (collision.transform.tag.Equals("Ground") || collision.transform.tag.Equals("Wall"))
             {
-                if (isJumpExit == true && IsOnGround(collision.transform.tag))
+                if (isJumpExit == true && IsOnGround())
                 {
                     isJump = false;
                     isJumpExit = false;
@@ -505,11 +538,23 @@ public class Player : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if(collision.transform.tag.Equals("Ground") || collision.transform.tag.Equals("Wall"))
+        //if (collision.gameObject.tag.Equals("Wall") && isDown == false && Physics2D.GetIgnoreCollision(collision.collider, playerCollider) == true)
+        //{
+        //    Physics2D.IgnoreCollision(collision.collider, playerCollider, false);
+        //    Physics2D.IgnoreCollision(collision.collider, playerWallCollider, false);
+        //}
+
+        //if (collision.gameObject.tag.Equals("Wall") && Physics2D.GetIgnoreCollision(collision.collider, playerCollider) == false)
+        //{
+        //    Physics2D.IgnoreCollision(collision.collider, playerCollider, true);
+        //    Physics2D.IgnoreCollision(collision.collider, playerWallCollider, true);
+        //}
+
+        if (collision.transform.tag.Equals("Ground") || collision.transform.tag.Equals("Wall"))
         {
             if (isRun == true)
             {
-                if (!IsOnGround(collision.transform.tag))
+                if (!IsOnGround())
                 {
                     Debug.Log("달리기로 탈출");
                     isRun = false;
@@ -524,7 +569,7 @@ public class Player : MonoBehaviour
             }
             else if (isJump == false)
             {
-                if (!IsOnGround(collision.transform.tag))
+                if (!IsOnGround())
                 {
                     Debug.Log("점프로 탈출");
                     isJump = true;
@@ -532,19 +577,6 @@ public class Player : MonoBehaviour
                 }
             }
         }
-    }
-    private bool IsOnGround(string tagName)
-    {
-        nowplateformName = tagName;
-        RaycastHit2D raycastHit = Physics2D.BoxCast(transform.position, boxCastSize, 0f, Vector2.down, boxCastMaxDistance, LayerMask.GetMask(tagName));
-        return (raycastHit.collider != null);
-    }
-
-    private bool IsOnGround2(string tagName)  //긴 바닥체크 (경사선은 길게 체크해야 내려가면서 체크가 가능하기 때문에)
-    {
-        nowplateformName = tagName;
-        RaycastHit2D raycastHit = Physics2D.BoxCast(transform.position, boxCastSize, 0f, Vector2.down, 0.5f, LayerMask.GetMask(tagName));
-        return (raycastHit.collider != null);
     }
 
     private bool IsOnGround()

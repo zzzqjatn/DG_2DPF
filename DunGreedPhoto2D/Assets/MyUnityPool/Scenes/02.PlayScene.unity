@@ -570,7 +570,7 @@ GameObject:
   - component: {fileID: 315460820}
   - component: {fileID: 315460822}
   - component: {fileID: 315460823}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: LeftHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -693,8 +693,6 @@ GameObject:
   - component: {fileID: 359242780}
   - component: {fileID: 359242784}
   - component: {fileID: 359242783}
-  - component: {fileID: 359242782}
-  - component: {fileID: 359242781}
   - component: {fileID: 359242785}
   - component: {fileID: 359242786}
   m_Layer: 9
@@ -723,46 +721,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 630, y: 44.3}
+  m_AnchoredPosition: {x: 630, y: 42.7}
   m_SizeDelta: {x: 13, y: 21}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!70 &359242781
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 359242779}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 13, y: 20}
-  m_Direction: 0
---- !u!50 &359242782
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 359242779}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 4
 --- !u!114 &359242783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -845,7 +806,7 @@ GameObject:
   - component: {fileID: 471840773}
   - component: {fileID: 471840772}
   - component: {fileID: 471840774}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: Cursor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -933,7 +894,7 @@ GameObject:
   - component: {fileID: 498929943}
   - component: {fileID: 498929945}
   - component: {fileID: 498929944}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: RIghtHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1954,9 +1915,9 @@ GameObject:
   - component: {fileID: 1076103477}
   - component: {fileID: 1076103472}
   - component: {fileID: 1076103478}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2077,11 +2038,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDash: 0
   isJump: 0
+  isDown: 0
   isRun: 0
   isJumpExit: 0
   isSlope: 0
   clamAngle: 0
-  MaxAngle: 45
+  MaxAngle: 60
   perpVelo: {x: 0, y: 0}
 --- !u!70 &1076103478
 CapsuleCollider2D:
@@ -2096,8 +2058,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -1}
-  m_Size: {x: 11, y: 18.5}
+  m_Offset: {x: 0, y: -1.4}
+  m_Size: {x: 12, y: 18.5}
   m_Direction: 0
 --- !u!1 &1160621402
 GameObject:
@@ -2108,7 +2070,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1160621403}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: PlayerObjs
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -2149,7 +2111,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1175427363}
   - component: {fileID: 1175427364}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: DushEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2473,7 +2435,7 @@ GameObject:
   - component: {fileID: 1235133687}
   - component: {fileID: 1235133689}
   - component: {fileID: 1235133688}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6481,7 +6443,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1461787917}
   - component: {fileID: 1461787918}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: MirageEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6694,9 +6656,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1616995882}
   - component: {fileID: 1616995883}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: WallCheck
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6837,7 +6799,7 @@ GameObject:
   - component: {fileID: 1726555701}
   - component: {fileID: 1726555700}
   - component: {fileID: 1726555699}
-  m_Layer: 13
+  m_Layer: 12
   m_Name: Ground
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -9802,7 +9764,7 @@ GameObject:
   - component: {fileID: 2036557967}
   - component: {fileID: 2036557969}
   - component: {fileID: 2036557970}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: dust
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9987,7 +9949,7 @@ GameObject:
   - component: {fileID: 2112502090}
   - component: {fileID: 2112502089}
   - component: {fileID: 2112502091}
-  m_Layer: 10
+  m_Layer: 5
   m_Name: mirage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
