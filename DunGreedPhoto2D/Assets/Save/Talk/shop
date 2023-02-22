@@ -1,0 +1,22 @@
+{
+    "main": [
+        "상점에 오신것을 환영합니다."
+    ],
+    "select": [
+        {
+            "incount": 0,
+            "index": 0,
+            "talk": "상점"
+        },
+        {
+            "incount": 0,
+            "index": 1,
+            "talk": "확인1"
+        },
+        {
+            "incount": 0,
+            "index": 2,
+            "talk": "나가기"
+        }
+    ]
+}

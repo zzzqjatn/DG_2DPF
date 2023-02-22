@@ -4,84 +4,101 @@ using UnityEngine;
 
 public class NpcInfo : MonoBehaviour
 {
-    private bool ActiveKeyAct;
     private GameObject ActiveKey;
 
     private GameObject ShopBaseUI;
     private GameObject playerInven;
+    private GameObject talkBox;
+    private TalkboxCon talkCon;
 
-    private GameObject ShopNPC;
+    private Finder find_player;
+
+    private bool playerLeft;
 
     void Start()
     {
-        ActiveKeyAct = false;
         ActiveKey = GFunc.FindRootObj("GameObjs").FindChildObj("ActiveKey");
-        ShopNPC = gameObject.transform.parent.gameObject;
 
-        ShopBaseUI = GFunc.FindRootObj("UIObjs").FindChildObj("Shop");
-        playerInven = GFunc.FindRootObj("UIObjs").FindChildObj("Invnetory");
+        GameObject tmpRoot = GFunc.FindRootObj("UIObjs");
+        ShopBaseUI = tmpRoot.FindChildObj("Shop");
+        playerInven = tmpRoot.FindChildObj("Invnetory");
+        talkBox = tmpRoot.FindChildObj("TalkBox");
+
+        talkCon = tmpRoot.GetComponent<TalkboxCon>();
+
+        find_player = gameObject.FindChildObj("Finder").GetComponent<Finder>();
+
+        playerLeft = false;
     }
 
     void Update()
     {
-        shop();
+        ActivekeyShow();
         shopkeyInput();
     }
 
     private void shopkeyInput()
     {
-        if(ActiveKeyAct)
+        if(find_player.ActiveKeyAct)
         {
             if(Input.GetKeyDown(KeyCode.F))
             {
-                if (ShopBaseUI.activeSelf == false)
+                if (talkBox.activeSelf == false)
                 {
-                    ShopBaseUI.SetActive(true);
-                    playerInven.SetActive(true);
+                    talkBox.SetActive(true);
+                    talkCon.LoadTalkData("shop");
+                    talkCon.Talksett1(0);
+
+                    //ShopBaseUI.SetActive(true);
+                    //playerInven.SetActive(true);
                 }
-                else if(ShopBaseUI.activeSelf == true)
+                else if(talkBox.activeSelf == true)
                 {
-                    ShopBaseUI.SetActive(false);
-                    playerInven.SetActive(false);
+                    talkCon.talkconOut();
+                    talkBox.SetActive(false);
+                    //ShopBaseUI.SetActive(false);
+                    //playerInven.SetActive(false);
                 }
             }
+            playerLeft = false;
         }
-        if (!ActiveKeyAct)
+        if (!find_player.ActiveKeyAct && !playerLeft)
         {
-            ShopBaseUI.SetActive(false);
-            playerInven.SetActive(false);
+            talkCon.talkconOut();
+            talkBox.SetActive(false);
+            //ShopBaseUI.SetActive(false);
+            //playerInven.SetActive(false);
+            playerLeft = true;
         }
     }
 
-    private void shop()
+    private void ActivekeyShow()
     {
-        if(ActiveKeyAct)
+        if(find_player.ActiveKeyAct)
         {
             if(ActiveKey.activeSelf == false)
             {
                 ActiveKey.SetActive(true);
-                ActiveKey.RectLocalPosSet(new Vector3(ShopNPC.RectLocalPos().x, ShopNPC.RectLocalPos().y + 18, 0.0f));
+                ActiveKey.RectLocalPosSet(new Vector3(gameObject.RectLocalPos().x, gameObject.RectLocalPos().y + 20, 0.0f));
             }
         }
-        else if(!ActiveKeyAct)
+        else if(!find_player.ActiveKeyAct && playerLeft)
         {
             ActiveKey.SetActive(false);
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void temp()
     {
-        if(collision.transform.name.Equals("Player"))
+        if (ShopBaseUI.activeSelf == false)
         {
-            ActiveKeyAct = true;
+            ShopBaseUI.SetActive(true);
+            playerInven.SetActive(true);
         }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.transform.name.Equals("Player"))
+        else if (ShopBaseUI.activeSelf == true)
         {
-            ActiveKeyAct = false;
+            ShopBaseUI.SetActive(false);
+            playerInven.SetActive(false);
         }
     }
 }

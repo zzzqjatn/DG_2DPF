@@ -86,6 +86,10 @@ public static partial class GFunc
         return Result;
     }
 
+    public static void RectSizeSet(this GameObject obj,Vector2 size)
+    {
+        obj.GetComponent<RectTransform>().sizeDelta = size;
+    }
     public static Vector2 RectSize(this GameObject obj)
     {
         Vector2 Result = default;
