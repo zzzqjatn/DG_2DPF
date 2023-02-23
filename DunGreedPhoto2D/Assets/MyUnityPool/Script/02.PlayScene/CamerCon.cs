@@ -37,6 +37,8 @@ public class CamerCon : MonoBehaviour
 
     private float cameraHalfWidth, cameraHalfHeight;
 
+    private Vector3 desiredPosition;
+
     void Start()
     {
         camera = GFunc.FindRootObj("Main Camera");
@@ -53,6 +55,14 @@ public class CamerCon : MonoBehaviour
             StartCoroutine(ShakingCamera());
         }
         CameraSmoothMove();
+    }
+
+    public void CameraSizeReset(float limitMinX_ ,float limitMinY_ ,float limitMaxX_,float limitMaxY_)
+    {
+        limitMinX = limitMinX_;
+        limitMinY = limitMinY_;
+        limitMaxX = limitMaxX_;
+        limitMaxY = limitMaxY_;
     }
 
     void Update()
@@ -83,13 +93,23 @@ public class CamerCon : MonoBehaviour
         Vector2 tempLimitMin = ReMatchPos(new Vector2(limitMinX + cameraHalfWidth, limitMinY + cameraHalfHeight));
         Vector2 tempLimitMax = ReMatchPos(new Vector2(limitMaxX - cameraHalfWidth, limitMaxY - cameraHalfHeight));
 
-        Vector3 desiredPosition = new Vector3(
+        desiredPosition = new Vector3(
             Mathf.Clamp(target.position.x + tempOffset.x, tempLimitMin.x, tempLimitMax.x) + SET_SCREEN_WIDTH / 2,
             Mathf.Clamp(target.position.y + tempOffset.y, tempLimitMin.y, tempLimitMax.y) + SET_SCREEN_HEIGHT / 2,
             -10.0f);
 
         camera.transform.position = Vector3.Lerp(camera.transform.position, desiredPosition, Time.deltaTime * smoothSpeed);
         CameraPos = camera.transform.position;    //카메라 중점
+    }
+
+    public bool IsRightPosition()
+    {
+        if (Vector2.Distance(
+            new Vector2(camera.transform.position.x, camera.transform.position.y),
+            new Vector2(desiredPosition.x, desiredPosition.y)) < 0.5f)
+            return true;
+        
+        return false;
     }
 
     private Vector2 ReMatchPos(Vector2 inputPos)

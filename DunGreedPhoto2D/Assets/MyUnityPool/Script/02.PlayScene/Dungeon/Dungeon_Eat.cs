@@ -1,9 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Dungeon_Eat : MonoBehaviour
 {
@@ -14,6 +10,8 @@ public class Dungeon_Eat : MonoBehaviour
     private Animator DungeonEatAni;
     private GameObject player_;
 
+    private CamerCon camera_;
+
     private bool IsGone;
 
     void Start()
@@ -21,6 +19,7 @@ public class Dungeon_Eat : MonoBehaviour
         Town = GFunc.FindRootObj("GameObjs").FindChildObj("Town");
         Dungeon1 = GFunc.FindRootObj("GameObjs").FindChildObj("Dungeon1-1");
         player_ = GFunc.FindRootObj("Playercanvas").FindChildObj("Player");
+        camera_ = GFunc.FindRootObj("CameraCon").GetComponent<CamerCon>();
 
         DungeonEat_ = gameObject.FindChildObj("DungeonEat");
         DungeonEatAni = DungeonEat_.GetComponent<Animator>();
@@ -31,20 +30,20 @@ public class Dungeon_Eat : MonoBehaviour
     {
         if (IsGone == true)
         {
-            moveDungeon();
+            moveDungeon(); 
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.transform.name.Equals("Player"))
+        if (collision.transform.name.Equals("Player"))
         {
             IsGone = true;
             DungeonEat_.SetActive(true);
-            moveDungeon();
+            moveScreen.instance.IsActive = false;
         }
     }
-
     public void moveDungeon()
     {
         if (DungeonEatAni.GetCurrentAnimatorStateInfo(0).IsName("DungeonEat") &&
@@ -53,6 +52,10 @@ public class Dungeon_Eat : MonoBehaviour
             Town.SetActive(false);
             Dungeon1.SetActive(true);
             player_.SetActive(true);
+            player_.RectLocalPosSet(new Vector3(0,0,0));
+            camera_.CameraSizeReset(-8, -10, 122, 7);
+            Gmanager.instance.IsDungeon = true;
+            DungeonEat_.SetActive(false);
             IsGone = false;
         }
         else if (DungeonEatAni.GetCurrentAnimatorStateInfo(0).IsName("DungeonEat") &&
@@ -60,7 +63,5 @@ public class Dungeon_Eat : MonoBehaviour
         {
             player_.SetActive(false);
         }
-        //LoadingSceneManager.LoadScene("02.PlayScene");
     }
-
 }

@@ -32,8 +32,6 @@ public class Player : MonoBehaviour
     private float dustEventTime;
     private float dashEventTime;
 
-    private GameObject LeftHand;
-
     private bool isRight;
     private bool isLeft;
     public bool isDown;
@@ -56,6 +54,7 @@ public class Player : MonoBehaviour
     public Vector2 perpVelo;
 
     private Collider2D IgnoreCollider;
+    private Collider2D IgnoreCollider2;
 
     void Start()
     {
@@ -65,6 +64,8 @@ public class Player : MonoBehaviour
         playerWallCollider = gameObject.FindChildObj("WallCheck").GetComponent<BoxCollider2D>();
 
         IgnoreCollider = GFunc.FindRootObj("GameObjs").FindChildObj("Wall").GetComponent<TilemapCollider2D>();
+        IgnoreCollider2 = GFunc.FindRootObj("GameObjs").FindChildObj("DunGeon").FindChildObj("Wall").GetComponent<TilemapCollider2D>();
+
 
         isDash = false;
         isJump = false;
@@ -85,7 +86,6 @@ public class Player : MonoBehaviour
         dustEventTime = 0.0f;
         dashEventTime = 0.2f;
 
-        LeftHand = gameObject.FindChildObj("LeftHand");
 
         isRight = false;
         isLeft = false;
@@ -111,12 +111,18 @@ public class Player : MonoBehaviour
         {
             Physics2D.IgnoreCollision(IgnoreCollider, playerCollider, true);
             Physics2D.IgnoreCollision(IgnoreCollider, playerWallCollider, true);
+
+            Physics2D.IgnoreCollision(IgnoreCollider2, playerCollider, true);
+            Physics2D.IgnoreCollision(IgnoreCollider2, playerWallCollider, true);
         }
 
         if (isDown == false)
         {
             Physics2D.IgnoreCollision(IgnoreCollider, playerCollider, false);
             Physics2D.IgnoreCollision(IgnoreCollider, playerWallCollider, false);
+
+            Physics2D.IgnoreCollision(IgnoreCollider2, playerCollider, false);
+            Physics2D.IgnoreCollision(IgnoreCollider2, playerWallCollider, false);
         }
     }
 
@@ -132,8 +138,6 @@ public class Player : MonoBehaviour
         Player_Running();
         Player_DashRunnig();
         Player_AniCon();
-
-        HandPosition();
     }
 
     public void playerMoves()
@@ -472,16 +476,10 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void HandPosition()
-    {
-        LeftHand.RectLocalPosSet(new Vector3(7.0f, -5.0f, 0.0f));
-    }
 
     IEnumerator LeftPunch(Vector3 firstPos)
     {
         bool isRight = false;
-        Rigidbody2D handRig = LeftHand.GetComponent<Rigidbody2D>();
-        handRig.velocity = Vector2.zero;
         Vector2 Dir = new Vector2(gameObject.RectLocalPos().x, gameObject.RectLocalPos().y);
         //내 마우스 위치
         Vector2 mousePos = MouseManager.ScreenMatchSizeMousePos();
@@ -490,7 +488,6 @@ public class Player : MonoBehaviour
 
         if (gameObject.RectLocalRot().y == 0) { isRight = true; }
 
-        handRig.AddForce(new Vector2(Dir.x, Dir.y).normalized * 50, ForceMode2D.Impulse);
 
         yield return new WaitForSeconds(0.05f);
 
