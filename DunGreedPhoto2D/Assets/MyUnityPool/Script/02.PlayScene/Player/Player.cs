@@ -64,8 +64,8 @@ public class Player : MonoBehaviour
         playerCollider = gameObject.GetComponent<CapsuleCollider2D>();
         playerWallCollider = gameObject.FindChildObj("WallCheck").GetComponent<BoxCollider2D>();
 
-        IgnoreCollider = GFunc.FindRootObj("GameObjs").FindChildObj("Wall").GetComponent<TilemapCollider2D>();
-        IgnoreCollider2 = GFunc.FindRootObj("GameObjs").FindChildObj("DunGeon").FindChildObj("Wall").GetComponent<TilemapCollider2D>();
+        //IgnoreCollider = GFunc.FindRootObj("GameObjs").FindChildObj("Wall").GetComponent<TilemapCollider2D>();
+        //IgnoreCollider2 = GFunc.FindRootObj("GameObjs").FindChildObj("DunGeon").FindChildObj("Wall").GetComponent<TilemapCollider2D>();
 
         isDash = false;
         isJump = false;
@@ -106,23 +106,23 @@ public class Player : MonoBehaviour
     {
         playerMoves();
 
-        if (isDown == true)
-        {
-            Physics2D.IgnoreCollision(IgnoreCollider, playerCollider, true);
-            Physics2D.IgnoreCollision(IgnoreCollider, playerWallCollider, true);
+        //if (isDown == true)
+        //{
+        //    Physics2D.IgnoreCollision(IgnoreCollider, playerCollider, true);
+        //    Physics2D.IgnoreCollision(IgnoreCollider, playerWallCollider, true);
 
-            Physics2D.IgnoreCollision(IgnoreCollider2, playerCollider, true);
-            Physics2D.IgnoreCollision(IgnoreCollider2, playerWallCollider, true);
-        }
+        //    Physics2D.IgnoreCollision(IgnoreCollider2, playerCollider, true);
+        //    Physics2D.IgnoreCollision(IgnoreCollider2, playerWallCollider, true);
+        //}
 
-        if (isDown == false)
-        {
-            Physics2D.IgnoreCollision(IgnoreCollider, playerCollider, false);
-            Physics2D.IgnoreCollision(IgnoreCollider, playerWallCollider, false);
+        //if (isDown == false)
+        //{
+        //    Physics2D.IgnoreCollision(IgnoreCollider, playerCollider, false);
+        //    Physics2D.IgnoreCollision(IgnoreCollider, playerWallCollider, false);
 
-            Physics2D.IgnoreCollision(IgnoreCollider2, playerCollider, false);
-            Physics2D.IgnoreCollision(IgnoreCollider2, playerWallCollider, false);
-        }
+        //    Physics2D.IgnoreCollision(IgnoreCollider2, playerCollider, false);
+        //    Physics2D.IgnoreCollision(IgnoreCollider2, playerWallCollider, false);
+        //}
     }
 
     void Update()
