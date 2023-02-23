@@ -5,24 +5,8 @@ using UnityEngine;
 
 public class playerInven : MonoBehaviour
 {
-    public static playerInven instance;
-
     public Dictionary<string,GameObject> inventory;
     private const int MAX_INVEN = 15;
-
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else if (instance != this)
-        {
-            Destroy(instance.gameObject);
-        }
-
-        inventory = new Dictionary<string, GameObject>();
-    }
 
     public void AddItem(string itemName,GameObject obj)
     {
@@ -31,8 +15,6 @@ public class playerInven : MonoBehaviour
             inventory.Add(itemName, obj);
         }
     }
-
-
     void Start()
     {
         
@@ -42,6 +24,11 @@ public class playerInven : MonoBehaviour
     {
         
     }
+}
+
+public class inven
+{
+
 }
 
 public class invenSlot

@@ -10,10 +10,10 @@ public class playerHandCon : MonoBehaviour
     void Start()
     {
         leftHand = gameObject.FindChildObj("LeftHand");
-        rightHand = gameObject.FindChildObj("RIghtHand");
+        rightHand = gameObject.FindChildObj("RightHand");
 
         //rightHand.RectLocalPosSet(new Vector3(-7.0f,-5.0f,0.0f));
-        //leftHand.RectLocalPosSet(new Vector3(7.0f, -5.0f, 0.0f));
+        //leftHand.RectLocalPosSet(new Vector3(7.0f,-5.0f, 0.0f));
     }
 
     void Update()

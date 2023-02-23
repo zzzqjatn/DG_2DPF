@@ -63,6 +63,12 @@ public static partial class GFunc
                             tmepPos.z);
         return Result;
     }
+
+    public static void RectLocalRotSet(this GameObject obj,Vector3 angle)
+    {
+        obj.GetComponent<RectTransform>().localRotation = quaternion.Euler(angle);
+    }
+
     public static Quaternion RectLocalRot(this GameObject obj)
     {
         Quaternion Result = default;

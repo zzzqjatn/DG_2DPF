@@ -6,6 +6,20 @@ using UnityEngine.UI;
 
 public class WeaponCon : MonoBehaviour
 {
+    public static WeaponCon instance;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Destroy(instance.gameObject);
+        }
+    }
+
     private const string Sword = "GreatSword";
 
     private SpriteAtlas SA_tmp;
@@ -14,6 +28,8 @@ public class WeaponCon : MonoBehaviour
     private GameObject RightHand;
 
     private bool IsEquite;
+
+    private int motion;
 
     void Start()
     {
@@ -24,6 +40,7 @@ public class WeaponCon : MonoBehaviour
 
         SA_tmp = Resources.Load<SpriteAtlas>("SpriteAtlas/SpriteAtlas");
         Setting();
+        motion = 1;
     }
 
     void Update()
@@ -31,6 +48,7 @@ public class WeaponCon : MonoBehaviour
         if (IsEquite)
         {
             SetHandPos();
+            motions();
         }
     }
 
@@ -42,11 +60,35 @@ public class WeaponCon : MonoBehaviour
         weaponPart.GetComponent<BoxCollider2D>().size =
             new Vector2(weaponPart.RectSize().x, weaponPart.RectSize().y);
         IsEquite = true;
+
+        LeftHand.transform.parent = weaponPart.transform;
+        RightHand.transform.parent = weaponPart.transform;
     }
 
     public void SetHandPos()
     {
         LeftHand.RectLocalPosSet(new Vector3(-7.0f, 0.0f, 0.0f));
         RightHand.RectLocalPosSet(new Vector3(-9.0f, 0.0f, 0.0f));
+    }
+
+    public void motions()
+    {
+        if(motion == 1)
+        {
+            weaponPart.RectLocalPosSet(new Vector3(-1,8,0.0f));
+            weaponPart.RectLocalRotSet(new Vector3(0, 0, 140));
+        }
+        else if(motion == 2)
+        {
+            weaponPart.RectLocalPosSet(new Vector3(-5, -9, 0.0f));
+            weaponPart.RectLocalRotSet(new Vector3(0, 0, -140));
+        }
+    }
+
+    public void motionschange()
+    {
+        motion += 1;
+
+        if (motion > 2) motion = 1;
     }
 }

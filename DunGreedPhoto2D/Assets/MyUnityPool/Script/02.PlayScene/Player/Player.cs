@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.Burst.CompilerServices;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -12,6 +10,9 @@ public class Player : MonoBehaviour
     private Rigidbody2D playerRB;
     private CapsuleCollider2D playerCollider;
     private BoxCollider2D playerWallCollider;
+
+    private State playerST; //플레이어만 사용
+    private playerInven playerInven;    //상점 아이템 등등
 
     public bool isDash;
     public bool isJump;
@@ -66,7 +67,6 @@ public class Player : MonoBehaviour
         IgnoreCollider = GFunc.FindRootObj("GameObjs").FindChildObj("Wall").GetComponent<TilemapCollider2D>();
         IgnoreCollider2 = GFunc.FindRootObj("GameObjs").FindChildObj("DunGeon").FindChildObj("Wall").GetComponent<TilemapCollider2D>();
 
-
         isDash = false;
         isJump = false;
 
@@ -85,7 +85,6 @@ public class Player : MonoBehaviour
 
         dustEventTime = 0.0f;
         dashEventTime = 0.2f;
-
 
         isRight = false;
         isLeft = false;
@@ -138,6 +137,8 @@ public class Player : MonoBehaviour
         Player_Running();
         Player_DashRunnig();
         Player_AniCon();
+
+        PlayerControl();
     }
 
     public void playerMoves()
@@ -461,6 +462,8 @@ public class Player : MonoBehaviour
         //공격
         if (Input.GetMouseButtonDown(0))
         {
+            WeaponCon.instance.motionschange();
+
             //StartCoroutine("LeftPunch", LeftHand.RectLocalPos());
 
             //Rigidbody2D handRig = LeftHand.GetComponent<Rigidbody2D>();
@@ -475,7 +478,6 @@ public class Player : MonoBehaviour
             //handRig.AddForce(new Vector2(Dir.x, Dir.y).normalized * 50, ForceMode2D.Impulse);
         }
     }
-
 
     IEnumerator LeftPunch(Vector3 firstPos)
     {
