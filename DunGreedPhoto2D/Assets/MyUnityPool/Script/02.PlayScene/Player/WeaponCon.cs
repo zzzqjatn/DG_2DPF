@@ -28,8 +28,6 @@ public class WeaponCon : MonoBehaviour
     private GameObject LeftHand;
     private GameObject RightHand;
 
-    private GameObject motionImag;
-    private Quaternion motionImagQ;
     private Animator motionAni;
 
     private bool IsEquite;
@@ -41,8 +39,6 @@ public class WeaponCon : MonoBehaviour
         weaponPart = gameObject.FindChildObj("shortRangeWeapon");
         LeftHand = gameObject.FindChildObj("LeftHand");
         RightHand = gameObject.FindChildObj("RightHand");
-        motionImag = gameObject.FindChildObj("motionImg");
-        motionAni = motionImag.GetComponent<Animator>();
 
         IsEquite = false;
 
@@ -85,24 +81,11 @@ public class WeaponCon : MonoBehaviour
         {
             weaponPart.RectLocalPosSet(new Vector3(-1,8,0.0f));
             weaponPart.RectLocalRotSet(new Vector3(0, 0, 140));
-
-            motionImag.RectLocalPosSet(new Vector3(-5.9f, -8.9f, 0));
-
-            motionImagQ = Quaternion.Euler(new Vector3(180, 0, 0)) * Quaternion.Euler(new Vector3(0, 0, 49));
-            motionImag.RectLocalRotSet(motionImagQ);
-
-            motionAni.SetBool("IsAttack", true);
         }
         else if(motion == 2)
         {
             weaponPart.RectLocalPosSet(new Vector3(9.5f, -10, 0.0f));
             weaponPart.RectLocalRotSet(new Vector3(0, 0, 320));
-
-            motionImag.RectLocalPosSet(new Vector3(-6.2f, 9f, 0));
-            motionImagQ = Quaternion.Euler(new Vector3(0, 0, 48));
-            motionImag.RectLocalRotSet(motionImagQ);
-
-            motionAni.SetBool("IsAttack", true);
         }
     }
 

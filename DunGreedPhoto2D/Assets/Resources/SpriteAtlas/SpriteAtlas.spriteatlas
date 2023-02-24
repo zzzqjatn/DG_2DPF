@@ -484,6 +484,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: bdb207987b6fc8547aea512afe471c61, type: 3}
   - {fileID: 21300000, guid: 9da78c98cdeca67469ced44633942fb3, type: 3}
   - {fileID: 21300000, guid: c301fe98a305ac94a863a529bd2e5881, type: 3}
+  - {fileID: 21300000, guid: cd659f98c7882df4396c852ceb133c45, type: 3}
   - {fileID: 21300000, guid: 1be95ca8b7f9e514fbe80b13423dc71f, type: 3}
   - {fileID: 21300000, guid: 0a1ca2b8abe813e43915bded27527073, type: 3}
   - {fileID: 21300000, guid: 9379d5c8f13908b42bb53aed4baac58f, type: 3}
@@ -666,6 +667,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: ca1672acba63a8c4fa1129a71a300ab8, type: 3}
   - {fileID: 21300000, guid: d494e3ac2cf8a9244a79bfdd94072c5c, type: 3}
   - {fileID: 21300000, guid: 914cf2bc949342840a8f3d2615836393, type: 3}
+  - {fileID: 21300000, guid: b17218bc65d9d0143bd92fd3dc207aa7, type: 3}
   - {fileID: 21300000, guid: af523abc70169454599d17ab2f97f98a, type: 3}
   - {fileID: 21300000, guid: 65f426cce503a2b4ea0cbf28b1abde8e, type: 3}
   - {fileID: 21300000, guid: 5b0af8cc6677c2a4b82d352f15c7d7d6, type: 3}
@@ -812,6 +814,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 9f9ae0bf98d997d469a613ab2550ce56, type: 3}
   - {fileID: 21300000, guid: d4b732bf0221e3a4ea274751f9fffce8, type: 3}
   - {fileID: 21300000, guid: 314c9cbf823ba6a498dadf0695a43c4b, type: 3}
+  - {fileID: 21300000, guid: dd12bebf75e27d74b9a9541d44617e9f, type: 3}
   - {fileID: 21300000, guid: 151e12cf431116f41a4d30f238a68a42, type: 3}
   - {fileID: 21300000, guid: 4e7ecbdfdcac3b2429b82b312c60a883, type: 3}
   - {fileID: 21300000, guid: 4423a8ef929e1a8478d550583be86a37, type: 3}
@@ -1255,6 +1258,7 @@ SpriteAtlas:
   - Wall_Jungle_Ruin_4_4
   - Bat_RedAttack5
   - SkellBossLeftHandAttack01
+  - SwingFX00
   - Bird3
   - Wall_Cracked_4
   - Task02_Wall_03 #226389
@@ -1437,6 +1441,7 @@ SpriteAtlas:
   - Task02_Wall_43
   - BigWhiteSkelParticle_0
   - Wall_Basic_12
+  - SwingFX02
   - DungeonEat15
   - Desert_Wall_09
   - Task02_Wall_51
@@ -1583,6 +1588,7 @@ SpriteAtlas:
   - Stele10
   - Tile_H4
   - Task02_Wall_24 #226397
+  - SwingFX01
   - RustyGreatSword09
   - Wall_Jungle_Ruin_7_1
   - SkellBossIdle9

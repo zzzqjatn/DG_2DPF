@@ -37,6 +37,5 @@ public class PlayerData : MonoBehaviour
     public void StartGame(int slotNum)
     {
         SlotNum_ = slotNum;
-
     }
 }

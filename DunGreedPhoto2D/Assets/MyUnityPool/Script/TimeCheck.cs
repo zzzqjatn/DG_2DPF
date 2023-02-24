@@ -20,6 +20,7 @@ public class TimeCheck : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
 
         IsPlay = false;
+        InTime = 0.0f;
     }
 
     void Start()

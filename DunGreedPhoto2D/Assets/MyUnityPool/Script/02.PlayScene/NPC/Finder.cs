@@ -5,6 +5,7 @@ using UnityEngine;
 public class Finder : MonoBehaviour
 {
     public bool ActiveKeyAct;
+    public Vector2 P_position;
 
     void Start()
     {
@@ -21,6 +22,7 @@ public class Finder : MonoBehaviour
         if (collision.transform.name.Equals("Player"))
         {
             ActiveKeyAct = true;
+            P_position = collision.transform.gameObject.RectLocalPos();
         }
     }
 

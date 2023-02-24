@@ -67,7 +67,7 @@ public class Player : MonoBehaviour
         JumpPower = 10;
         dashPower = 50;
 
-        playerState.instance.p_state.settingState(1, 80, 80, 2, 2, 0.2f, 50, 5);
+        //playerState.instance.p_state.settingState(1, 80, 80, 2, 2, 0.2f, 50, 5);
 
         dashEndTime = 0.08f;
         dashPlayTime = 0.0f;
