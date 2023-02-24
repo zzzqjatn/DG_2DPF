@@ -31,13 +31,11 @@ public class SlotData
 public class DataManager : MonoBehaviour
 {
     public static DataManager instance;
-
-    public SlotData slotData = new SlotData();
-
     public string DirectoryPath;
     public string fileName;
 
     public int PlaySlotNum;
+    public SlotData slotData = new SlotData();
 
     private void Awake()
     {

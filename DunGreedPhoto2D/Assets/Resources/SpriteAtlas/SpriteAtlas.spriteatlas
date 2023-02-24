@@ -54,6 +54,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 742c6a006eba9954ba200167a8777350, type: 3}
   - {fileID: 21300000, guid: c5de1b00cfb1ae141ba311917038b83d, type: 3}
   - {fileID: 21300000, guid: 2db431104cca02e49813f63f3373e6f2, type: 3}
+  - {fileID: 21300000, guid: 31cd31109f5329a4ca106b11f46cd991, type: 3}
   - {fileID: 21300000, guid: d3559d10ecdc8374aaa115728a9e5d58, type: 3}
   - {fileID: 21300000, guid: ad4cc12091c42c24d89c639591dc34dc, type: 3}
   - {fileID: 21300000, guid: cf796820cddcca24c8f1ffc9530f96c8, type: 3}
@@ -435,6 +436,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: c6e1b9a789d590e46b0a9d7a1527d291, type: 3}
   - {fileID: 21300000, guid: 20bcaca72258e624eb3fa279b72ebfc5, type: 3}
   - {fileID: 21300000, guid: 6c661ea73b2725f49867726e8d98c688, type: 3}
+  - {fileID: 21300000, guid: fa6ac3b7788035146b93878074375989, type: 3}
   - {fileID: 21300000, guid: bfad33c729cd405429a34d3eba215bbc, type: 3}
   - {fileID: 21300000, guid: d05f79c79b724c643a3c5216f4c02799, type: 3}
   - {fileID: 21300000, guid: 9b84fac749f2cb9449e82b64a11577fe, type: 3}
@@ -518,6 +520,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 31bde0a9e94642a45aaf92ad8f3a17e8, type: 3}
   - {fileID: 21300000, guid: e210cba9f25394f4c8de7bdbe2709966, type: 3}
   - {fileID: 21300000, guid: 046b5da96beecb445a025f3ee932cd0a, type: 3}
+  - {fileID: 21300000, guid: b1214fa9b2f494f40b0e62cee4ba3e2a, type: 3}
   - {fileID: 21300000, guid: 4b2b94b95e31d434fba6544804407c0c, type: 3}
   - {fileID: 21300000, guid: 9be441c99d5943d4c9e98fc508cb3cc9, type: 3}
   - {fileID: 21300000, guid: c46bc3c9986204f4b973d7aef92f02ed, type: 3}
@@ -822,6 +825,7 @@ SpriteAtlas:
   - SkellBossParticle3
   - Tile_Slim_TopLeft
   - NPC_Merchant0
+  - RustyGreatSword07
   - Wall_Board_Middle_1
   - Task02_Wall_32
   - RustyGreatSword02
@@ -1203,6 +1207,7 @@ SpriteAtlas:
   - Wall_H12 #226372
   - Wall_Ice_04
   - BigWhiteSkelParticle_2 #226088
+  - RustyGreatSword08
   - Task02_Wall_01 #226373
   - Wall_Jungle_Ruin_4_5
   - DungeonEat22
@@ -1286,6 +1291,7 @@ SpriteAtlas:
   - Wall_H8
   - SkellBossLeftHandAttack17
   - Wall_Type2_StairRight2
+  - RustyGreatSword06
   - SkellBossWeaponLaserBody5
   - Wall_Board_Left #226233
   - Wall_H3

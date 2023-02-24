@@ -64,6 +64,12 @@ public static partial class GFunc
         return Result;
     }
 
+    public static void RectLocalRotSet(this GameObject obj, quaternion angle)
+    {
+        obj.GetComponent<RectTransform>().localRotation = angle;
+    }
+
+
     public static void RectLocalRotSet(this GameObject obj,Vector3 angle)
     {
         obj.GetComponent<RectTransform>().localRotation = quaternion.Euler(angle);

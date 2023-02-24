@@ -35,18 +35,31 @@ public class playerState : MonoBehaviour
 
 public class State
 {
-    private float maxHP;
-    private float currentHP;
+    public int level;
 
-    private float maxDash;
-    private float currentDash;
-    private float cooltimeDash;
+    public float maxHP;
+    public float currentHP;
 
-    private float attack;
-    private float speed;
+    public float maxDash;
+    public float currentDash;
+    public float cooltimeDash;
 
-    public void settingState(float maxHP_,float currentHP_,float maxDash_,float currentDash_,float cooltimeDash_,float attack_,float speed_)
+    public float attack;
+    public float speed;
+
+    public void levelUp()
     {
+        level += 1;
+
+        maxHP = 80 * level;
+        currentHP = maxHP;
+
+        attack = 50 * level;
+    }
+
+    public void settingState(int level_,float maxHP_,float currentHP_,float maxDash_,float currentDash_,float cooltimeDash_,float attack_,float speed_)
+    {
+        level = level_;
         maxHP = maxHP_;
         currentHP = currentHP_;
 

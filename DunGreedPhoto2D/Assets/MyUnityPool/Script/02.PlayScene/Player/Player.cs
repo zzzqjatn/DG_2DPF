@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -10,9 +12,6 @@ public class Player : MonoBehaviour
     private Rigidbody2D playerRB;
     private CapsuleCollider2D playerCollider;
     private BoxCollider2D playerWallCollider;
-
-    private State playerST; //플레이어만 사용
-    private playerInven playerInven;    //상점 아이템 등등
 
     public bool isDash;
     public bool isJump;
@@ -54,18 +53,12 @@ public class Player : MonoBehaviour
 
     public Vector2 perpVelo;
 
-    private Collider2D IgnoreCollider;
-    private Collider2D IgnoreCollider2;
-
     void Start()
     {
         playerRB = gameObject.GetComponent<Rigidbody2D>();
         playerAni = gameObject.GetComponent<Animator>();
         playerCollider = gameObject.GetComponent<CapsuleCollider2D>();
         playerWallCollider = gameObject.FindChildObj("WallCheck").GetComponent<BoxCollider2D>();
-
-        //IgnoreCollider = GFunc.FindRootObj("GameObjs").FindChildObj("Wall").GetComponent<TilemapCollider2D>();
-        //IgnoreCollider2 = GFunc.FindRootObj("GameObjs").FindChildObj("DunGeon").FindChildObj("Wall").GetComponent<TilemapCollider2D>();
 
         isDash = false;
         isJump = false;
@@ -74,13 +67,11 @@ public class Player : MonoBehaviour
         JumpPower = 10;
         dashPower = 50;
 
-        dashMaxCount = 2;
-        dashCurrentCount = 2;
+        playerState.instance.p_state.settingState(1, 80, 80, 2, 2, 0.2f, 50, 5);
 
         dashEndTime = 0.08f;
         dashPlayTime = 0.0f;
 
-        dashCoolTimeMax = 0.1f;
         dashCoolTimeCurrent = 0.0f;
 
         dustEventTime = 0.0f;
@@ -105,6 +96,8 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         playerMoves();
+
+        //Physics2D.IgnoreLayerCollision(10, 12, true);
 
         //if (isDown == true)
         //{
@@ -321,6 +314,8 @@ public class Player : MonoBehaviour
             isDash = true;
             isJump = true;
             isJumpExit = true;
+
+            //Physics2D.iga(,12,true);
         }
     }
 
@@ -342,7 +337,6 @@ public class Player : MonoBehaviour
         if (isDash)
         {   //일정 시간만큼 돌진
             dashPlayTime += Time.deltaTime;
-
             //대쉬 잔상 발생
             if (dashPlayTime > dashEventTime)
             {
@@ -365,17 +359,22 @@ public class Player : MonoBehaviour
                 playerRB.gravityScale = 2.0f;
                 isDash = false;
 
-                if(IsOnGround())
+                if (IsOnGround())
                 {
                     isJump = false;
                     isJumpExit = false;
                 }
+
                 playerAni.SetBool("IsJump", isDash);
             }
             else
             {
                 playerAni.SetBool("IsJump", isDash);
             }
+        }
+        else if(!isDash)
+        {
+
         }
     }
 
@@ -479,46 +478,46 @@ public class Player : MonoBehaviour
         }
     }
 
-    IEnumerator LeftPunch(Vector3 firstPos)
-    {
-        bool isRight = false;
-        Vector2 Dir = new Vector2(gameObject.RectLocalPos().x, gameObject.RectLocalPos().y);
-        //내 마우스 위치
-        Vector2 mousePos = MouseManager.ScreenMatchSizeMousePos();
-        // 내 마우스 위치 - 나 위치
-        Dir = mousePos - Dir;
+    //IEnumerator LeftPunch(Vector3 firstPos)
+    //{
+    //    bool isRight = false;
+    //    Vector2 Dir = new Vector2(gameObject.RectLocalPos().x, gameObject.RectLocalPos().y);
+    //    //내 마우스 위치
+    //    Vector2 mousePos = MouseManager.ScreenMatchSizeMousePos();
+    //    // 내 마우스 위치 - 나 위치
+    //    Dir = mousePos - Dir;
 
-        if (gameObject.RectLocalRot().y == 0) { isRight = true; }
+    //    if (gameObject.RectLocalRot().y == 0) { isRight = true; }
 
 
-        yield return new WaitForSeconds(0.05f);
+    //    yield return new WaitForSeconds(0.05f);
 
-        //handRig.velocity = Vector2.zero;
+    //    //handRig.velocity = Vector2.zero;
 
-        //Vector2 tempruslt = new Vector2(7.0f - firstPos.x,-5.0f - firstPos.y);
+    //    //Vector2 tempruslt = new Vector2(7.0f - firstPos.x,-5.0f - firstPos.y);
 
-        //while(true)
-        //{
-        //    handRig.AddForce(new Vector2(tempruslt.x, tempruslt.y).normalized * 1, ForceMode2D.Force);
+    //    //while(true)
+    //    //{
+    //    //    handRig.AddForce(new Vector2(tempruslt.x, tempruslt.y).normalized * 1, ForceMode2D.Force);
 
-        //    if(isRight == false)
-        //    {
-        //        if (LeftHand.RectLocalPos().x < 7.0f)
-        //        {
-        //            break;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        if (LeftHand.RectLocalPos().x > 7.0f)
-        //        {
-        //            break;
-        //        }
-        //    }
-        //}
+    //    //    if(isRight == false)
+    //    //    {
+    //    //        if (LeftHand.RectLocalPos().x < 7.0f)
+    //    //        {
+    //    //            break;
+    //    //        }
+    //    //    }
+    //    //    else
+    //    //    {
+    //    //        if (LeftHand.RectLocalPos().x > 7.0f)
+    //    //        {
+    //    //            break;
+    //    //        }
+    //    //    }
+    //    //}
 
-        //LeftHand.RectLocalPosSet(new Vector3(7.0f, -5.0f, 0.0f));
-    }
+    //    //LeftHand.RectLocalPosSet(new Vector3(7.0f, -5.0f, 0.0f));
+    //}
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -538,18 +537,6 @@ public class Player : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        //if (collision.gameObject.tag.Equals("Wall") && isDown == false && Physics2D.GetIgnoreCollision(collision.collider, playerCollider) == true)
-        //{
-        //    Physics2D.IgnoreCollision(collision.collider, playerCollider, false);
-        //    Physics2D.IgnoreCollision(collision.collider, playerWallCollider, false);
-        //}
-
-        //if (collision.gameObject.tag.Equals("Wall") && Physics2D.GetIgnoreCollision(collision.collider, playerCollider) == false)
-        //{
-        //    Physics2D.IgnoreCollision(collision.collider, playerCollider, true);
-        //    Physics2D.IgnoreCollision(collision.collider, playerWallCollider, true);
-        //}
-
         if (collision.transform.tag.Equals("Ground") || collision.transform.tag.Equals("Wall"))
         {
             if (isRun == true)

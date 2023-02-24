@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.U2D;
 using UnityEngine.UI;
@@ -27,6 +28,10 @@ public class WeaponCon : MonoBehaviour
     private GameObject LeftHand;
     private GameObject RightHand;
 
+    private GameObject motionImag;
+    private Quaternion motionImagQ;
+    private Animator motionAni;
+
     private bool IsEquite;
 
     private int motion;
@@ -36,6 +41,9 @@ public class WeaponCon : MonoBehaviour
         weaponPart = gameObject.FindChildObj("shortRangeWeapon");
         LeftHand = gameObject.FindChildObj("LeftHand");
         RightHand = gameObject.FindChildObj("RightHand");
+        motionImag = gameObject.FindChildObj("motionImg");
+        motionAni = motionImag.GetComponent<Animator>();
+
         IsEquite = false;
 
         SA_tmp = Resources.Load<SpriteAtlas>("SpriteAtlas/SpriteAtlas");
@@ -77,11 +85,24 @@ public class WeaponCon : MonoBehaviour
         {
             weaponPart.RectLocalPosSet(new Vector3(-1,8,0.0f));
             weaponPart.RectLocalRotSet(new Vector3(0, 0, 140));
+
+            motionImag.RectLocalPosSet(new Vector3(-5.9f, -8.9f, 0));
+
+            motionImagQ = Quaternion.Euler(new Vector3(180, 0, 0)) * Quaternion.Euler(new Vector3(0, 0, 49));
+            motionImag.RectLocalRotSet(motionImagQ);
+
+            motionAni.SetBool("IsAttack", true);
         }
         else if(motion == 2)
         {
-            weaponPart.RectLocalPosSet(new Vector3(-5, -9, 0.0f));
-            weaponPart.RectLocalRotSet(new Vector3(0, 0, -140));
+            weaponPart.RectLocalPosSet(new Vector3(9.5f, -10, 0.0f));
+            weaponPart.RectLocalRotSet(new Vector3(0, 0, 320));
+
+            motionImag.RectLocalPosSet(new Vector3(-6.2f, 9f, 0));
+            motionImagQ = Quaternion.Euler(new Vector3(0, 0, 48));
+            motionImag.RectLocalRotSet(motionImagQ);
+
+            motionAni.SetBool("IsAttack", true);
         }
     }
 
@@ -91,4 +112,10 @@ public class WeaponCon : MonoBehaviour
 
         if (motion > 2) motion = 1;
     }
+
+    public void onEndEvent()
+    {
+        motionAni.SetBool("IsAttack", false);
+    }
+
 }
