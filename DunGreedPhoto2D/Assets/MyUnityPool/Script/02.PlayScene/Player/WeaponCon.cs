@@ -27,11 +27,11 @@ public class WeaponCon : MonoBehaviour
     private GameObject weaponPart;
     private GameObject LeftHand;
     private GameObject RightHand;
+    private GameObject attackMotion;
 
     private Animator motionAni;
 
     private bool IsEquite;
-
     private int motion;
 
     void Start()
@@ -39,6 +39,7 @@ public class WeaponCon : MonoBehaviour
         weaponPart = gameObject.FindChildObj("shortRangeWeapon");
         LeftHand = gameObject.FindChildObj("LeftHand");
         RightHand = gameObject.FindChildObj("RightHand");
+        attackMotion = gameObject.FindChildObj("motionImg");
 
         IsEquite = false;
 
@@ -51,9 +52,9 @@ public class WeaponCon : MonoBehaviour
     {
         if (IsEquite)
         {
-            SetHandPos();
             motions();
         }
+        else { SetHandPos(); }
     }
 
     public void Setting()
@@ -71,8 +72,8 @@ public class WeaponCon : MonoBehaviour
 
     public void SetHandPos()
     {
-        LeftHand.RectLocalPosSet(new Vector3(-7.0f, 0.0f, 0.0f));
-        RightHand.RectLocalPosSet(new Vector3(-9.0f, 0.0f, 0.0f));
+        LeftHand.RectLocalPosSet(new Vector3(-7.0f, -5.0f, 0.0f));
+        RightHand.RectLocalPosSet(new Vector3(-9.0f, -5.0f, 0.0f));
     }
 
     public void motions()
@@ -81,24 +82,29 @@ public class WeaponCon : MonoBehaviour
         {
             weaponPart.RectLocalPosSet(new Vector3(-1,8,0.0f));
             weaponPart.RectLocalRotSet(new Vector3(0, 0, 140));
+            LeftHand.RectLocalPosSet(new Vector3(-7.0f, 0.0f, 0.0f));
+            RightHand.RectLocalPosSet(new Vector3(-9.0f, 0.0f, 0.0f));
         }
         else if(motion == 2)
         {
             weaponPart.RectLocalPosSet(new Vector3(9.5f, -10, 0.0f));
             weaponPart.RectLocalRotSet(new Vector3(0, 0, 320));
+            LeftHand.RectLocalPosSet(new Vector3(-7.0f, 0.0f, 0.0f));
+            RightHand.RectLocalPosSet(new Vector3(-9.0f, 0.0f, 0.0f));
         }
     }
 
     public void motionschange()
     {
         motion += 1;
-
         if (motion > 2) motion = 1;
+
+        attackMotion.SetActive(true);
+        attackMotion.GetComponent<Animator>().Play("SwingAni");
     }
 
     public void onEndEvent()
     {
         motionAni.SetBool("IsAttack", false);
     }
-
 }
