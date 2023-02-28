@@ -28,7 +28,6 @@ public class Attack : MonoBehaviour
 
     void Update()
     {
-
         if(attackAni.GetCurrentAnimatorStateInfo(0).IsName("SwingAni") && 
             attackAni.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.5f)
         {

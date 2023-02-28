@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,14 +9,17 @@ public class Monster_bat : MonoBehaviour
     private MonsterFinder bat_finder;
     private Animator bat_Ani;
 
-    private float currenCoolTime;
+    private float currentCoolTime;
     private float maxCoolTime;
 
-    private float currenWaitTime;
+    private float currentWaitTime;
     private float maxWaitTime;
 
     public Vector2 respownPosition;
     public Vector2 movePoint;
+
+    private Vector2 moveDir;
+
 
     public enum State
     {
@@ -31,6 +35,9 @@ public class Monster_bat : MonoBehaviour
     {
         respownPosition = pos;
         gameObject.RectLocalPosSet(new Vector3(pos.x, pos.y, 0.0f));
+
+        state = State.Idle;
+        ChangeState(state);
     }
 
     void Start()
@@ -39,10 +46,10 @@ public class Monster_bat : MonoBehaviour
         bat_Ani = gameObject.GetComponent<Animator>();
 
         maxCoolTime = 1.0f;
-        currenCoolTime = 0.0f;
+        currentCoolTime = 0.0f;
 
         maxWaitTime = 1.0f;
-        currenWaitTime = maxWaitTime;
+        currentWaitTime = maxWaitTime;
 
         respownPosition = new Vector2(gameObject.RectLocalPos().x, gameObject.RectLocalPos().y);
 
@@ -123,32 +130,33 @@ public class Monster_bat : MonoBehaviour
                 break;
         }
     }
-    //------------------------------------
 
+    //------------------ Idle -------------
     private void IdleEnter()
     {
         bat_Ani.SetBool("IsAttack", false);
 
         maxWaitTime = Random.Range(0.5f,2.0f);
-        currenWaitTime = maxWaitTime;
+        currentWaitTime = maxWaitTime;
     }
     private void IdleUpdate()
     {
-        if(currenCoolTime >= 0)
+        //공격 쿨타임
+        if(currentCoolTime >= 0)
         {
-            currenCoolTime -= Time.deltaTime;
+            currentCoolTime -= Time.deltaTime;
         }
-        else if(bat_finder.FindPlayer == true && currenCoolTime < 0)
+        else if(bat_finder.FindPlayer == true && currentCoolTime < 0)
         {
             state = State.Attack;
             ChangeState(state);
         }
 
-        if(currenWaitTime >= 0)
+        if(currentWaitTime >= 0)
         {
-            currenWaitTime -= Time.deltaTime;
+            currentWaitTime -= Time.deltaTime;
         }
-        else if(currenWaitTime < 0)
+        else if(currentWaitTime < 0)
         {
             state = State.Move;
             ChangeState(state);
@@ -162,8 +170,9 @@ public class Monster_bat : MonoBehaviour
     {
 
     }
-    //------------------------------------
+    //------------------ Idle -------------
 
+    //------------------ Move -------------
     private void MoveEnter()
     {
         bat_Ani.SetBool("IsAttack",false);
@@ -172,31 +181,41 @@ public class Monster_bat : MonoBehaviour
             Random.Range(respownPosition.x - 5f, respownPosition.x + 5f),
             Random.Range(respownPosition.y - 5f, respownPosition.y + 5f));
 
-        movePoint -= respownPosition;
+        Debug.Log(movePoint);
 
-        if (movePoint.normalized.x < 0f)
-        {
-            gameObject.RectLocalRotSet(Quaternion.Euler(0, 180, 0));
-        }
-        else if (movePoint.normalized.x > 0f)
+        moveDir = movePoint - new Vector2(gameObject.RectLocalPos().x, gameObject.RectLocalPos().y);
+
+        Debug.Log(gameObject.RectLocalPos());
+        Debug.Log(moveDir);
+
+        if (moveDir.normalized.x < 0f)
         {
             gameObject.RectLocalRotSet(Quaternion.Euler(0, 0, 0));
         }
+        else if (moveDir.normalized.x > 0f)
+        {
+            gameObject.RectLocalRotSet(Quaternion.Euler(0, 180, 0));
+        }
+        //moveDir.x *= -1;
     }
     private void MoveUpdate()
     {
         //거리비교 일정 거리 되면 idle
-        if (Vector2.Distance(gameObject.RectLocalPos(), movePoint) <= 1f)
+        float Distance = Vector2.Distance(gameObject.RectLocalPos(), movePoint);
+        
+        Debug.Log(Distance);
+
+        if (Distance <= 1f)
         {
             state = State.Idle;
             ChangeState(state);
         }
 
-        if (currenCoolTime >= 0)
+        if (currentCoolTime >= 0)
         {
-            currenCoolTime -= Time.deltaTime;
+            currentCoolTime -= Time.deltaTime;
         }
-        else if (bat_finder.FindPlayer == true && currenCoolTime < 0)
+        else if (bat_finder.FindPlayer == true && currentCoolTime < 0)
         {
             state = State.Attack;
             ChangeState(state);
@@ -204,14 +223,15 @@ public class Monster_bat : MonoBehaviour
     }
     private void MovePhysicalUpdate()
     {
-        gameObject.transform.Translate(movePoint.normalized * 2 * Time.deltaTime);
+        gameObject.RectLocalPosAdd(moveDir.normalized * 1 * Time.deltaTime);
     }
     private void MoveExit()
     {
 
     }
-    //------------------------------------
+    //------------------ Move -------------
 
+    //------------------ Attack -------------
     private void AttackEnter()
     {
         bat_Ani.SetBool("IsAttack",true);
@@ -228,12 +248,9 @@ public class Monster_bat : MonoBehaviour
     }
     private void AttackUpdate()
     {
-        if (bat_Ani.GetCurrentAnimatorStateInfo(0).IsName("IsAttack") &&
-                  bat_Ani.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.8f)
+        if (bat_Ani.GetCurrentAnimatorStateInfo(0).IsName("batAttack") &&
+                  bat_Ani.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.8f)
         {
-            currenCoolTime = maxCoolTime;
-            bat_Ani.SetBool("IsAttack", false);
-
             state = State.Idle;
             ChangeState(state);
         }
@@ -246,8 +263,9 @@ public class Monster_bat : MonoBehaviour
     {
 
     }
-    //------------------------------------
+    //------------------ Attack -------------
 
+    //------------------ Die -------------
     private void DieEnter()
     {
 
@@ -264,5 +282,5 @@ public class Monster_bat : MonoBehaviour
     {
 
     }
-    //------------------------------------
+    //------------------ Die -------------
 }

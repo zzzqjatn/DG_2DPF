@@ -104,11 +104,15 @@ public class CamerCon : MonoBehaviour
 
     public bool IsRightPosition()
     {
-        if (Vector2.Distance(
+        float Distance = Vector2.Distance(
             new Vector2(camera.transform.position.x, camera.transform.position.y),
-            new Vector2(desiredPosition.x, desiredPosition.y)) < 0.5f)
-            return true;
+            new Vector2(desiredPosition.x, desiredPosition.y));
         
+        if (Distance <= 0.5f)
+        {
+            return true;
+        }
+
         return false;
     }
 

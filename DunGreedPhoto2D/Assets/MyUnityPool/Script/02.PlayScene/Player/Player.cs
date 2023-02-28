@@ -90,6 +90,9 @@ public class Player : MonoBehaviour
 
         perpVelo = Vector2.zero;
 
+        dashMaxCount = 2;
+        dashCurrentCount = 0;
+
         Dir = new Vector2(gameObject.RectLocalPos().x, gameObject.RectLocalPos().y);
     }
 
