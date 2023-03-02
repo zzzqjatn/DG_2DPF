@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Monster_bat : MonoBehaviour
 {
@@ -20,6 +21,9 @@ public class Monster_bat : MonoBehaviour
 
     private Vector2 moveDir;
 
+    private bulletObjPool bulletPool;
+
+    private GameObject lifebar;
 
     public enum State
     {
@@ -33,6 +37,11 @@ public class Monster_bat : MonoBehaviour
 
     public void SettingBat(Vector2 pos)
     {
+        bat_finder = gameObject.FindChildObj("Finder").GetComponent<MonsterFinder>();
+        bat_Ani = gameObject.GetComponent<Animator>();
+        bulletPool = GFunc.FindRootObj("GameObjs").FindChildObj("bulletObjs").GetComponent<bulletObjPool>();
+        lifebar = gameObject.FindChildObj("HpFront");
+
         respownPosition = pos;
         gameObject.RectLocalPosSet(new Vector3(pos.x, pos.y, 0.0f));
 
@@ -44,6 +53,8 @@ public class Monster_bat : MonoBehaviour
     {
         bat_finder = gameObject.FindChildObj("Finder").GetComponent<MonsterFinder>();
         bat_Ani = gameObject.GetComponent<Animator>();
+        bulletPool = GFunc.FindRootObj("GameObjs").FindChildObj("bulletObjs").GetComponent<bulletObjPool>();
+        lifebar = gameObject.FindChildObj("HpFront");
 
         maxCoolTime = 1.0f;
         currentCoolTime = 0.0f;
@@ -131,13 +142,14 @@ public class Monster_bat : MonoBehaviour
         }
     }
 
-    //------------------ Idle -------------
+    //------------------ Idle -------------                             
     private void IdleEnter()
     {
         bat_Ani.SetBool("IsAttack", false);
 
-        maxWaitTime = Random.Range(0.5f,2.0f);
+        maxWaitTime = Random.Range(1.0f,5.0f);
         currentWaitTime = maxWaitTime;
+        currentCoolTime = 3;
     }
     private void IdleUpdate()
     {
@@ -178,34 +190,29 @@ public class Monster_bat : MonoBehaviour
         bat_Ani.SetBool("IsAttack",false);
 
         movePoint = new Vector2(
-            Random.Range(respownPosition.x - 5f, respownPosition.x + 5f),
-            Random.Range(respownPosition.y - 5f, respownPosition.y + 5f));
-
-        Debug.Log(movePoint);
+            Random.Range(respownPosition.x - 10f, respownPosition.x + 10f),
+            Random.Range(respownPosition.y - 10f, respownPosition.y + 10f));
 
         moveDir = movePoint - new Vector2(gameObject.RectLocalPos().x, gameObject.RectLocalPos().y);
 
-        Debug.Log(gameObject.RectLocalPos());
-        Debug.Log(moveDir);
-
         if (moveDir.normalized.x < 0f)
         {
-            gameObject.RectLocalRotSet(Quaternion.Euler(0, 0, 0));
+            gameObject.RectLocalRotSet(Quaternion.Euler(0, 180, 0));
+            lifebar.RectLocalRotSet(Quaternion.Euler(0, 180, 0));
         }
         else if (moveDir.normalized.x > 0f)
         {
-            gameObject.RectLocalRotSet(Quaternion.Euler(0, 180, 0));
+            gameObject.RectLocalRotSet(Quaternion.Euler(0, 0, 0));
+            lifebar.RectLocalRotSet(Quaternion.Euler(0, 0, 0));
         }
-        //moveDir.x *= -1;
+        currentCoolTime = 3;
     }
     private void MoveUpdate()
     {
         //거리비교 일정 거리 되면 idle
         float Distance = Vector2.Distance(gameObject.RectLocalPos(), movePoint);
         
-        Debug.Log(Distance);
-
-        if (Distance <= 1f)
+        if (Distance <= 0.5f)
         {
             state = State.Idle;
             ChangeState(state);
@@ -223,7 +230,7 @@ public class Monster_bat : MonoBehaviour
     }
     private void MovePhysicalUpdate()
     {
-        gameObject.RectLocalPosAdd(moveDir.normalized * 1 * Time.deltaTime);
+        gameObject.RectLocalPosAdd(moveDir.normalized * 10 * Time.deltaTime);
     }
     private void MoveExit()
     {
@@ -240,16 +247,26 @@ public class Monster_bat : MonoBehaviour
         if (dir.normalized.x < 0f)
         {
             gameObject.RectLocalRotSet(Quaternion.Euler(0, 180, 0));
+            lifebar.RectLocalRotSet(Quaternion.Euler(0, 180, 0));
         }
         else if (dir.normalized.x > 0f)
         {
             gameObject.RectLocalRotSet(Quaternion.Euler(0, 0, 0));
+            lifebar.RectLocalRotSet(Quaternion.Euler(0, 0, 0));
         }
+        StartCoroutine(bulletCoroutin(gameObject.RectLocalPos(), dir, 20, 30));
     }
+
+    IEnumerator bulletCoroutin(Vector2 pos_,Vector2 dir_,float speed_,float damage_)
+    {
+        yield return new WaitForSeconds(0.6f);
+        bulletPool.bulletFire(pos_, dir_, speed_, damage_);
+    }
+
     private void AttackUpdate()
     {
         if (bat_Ani.GetCurrentAnimatorStateInfo(0).IsName("batAttack") &&
-                  bat_Ani.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.8f)
+          bat_Ani.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.8f)
         {
             state = State.Idle;
             ChangeState(state);

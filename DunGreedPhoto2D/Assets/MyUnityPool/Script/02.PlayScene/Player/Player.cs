@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -8,6 +9,20 @@ using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
 {
+    public static Player instance;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Destroy(instance.gameObject);
+        }
+    }
+
     private Animator playerAni;
     private Rigidbody2D playerRB;
     private CapsuleCollider2D playerCollider;
@@ -16,16 +31,11 @@ public class Player : MonoBehaviour
     public bool isDash;
     public bool isJump;
 
-    private int dashCurrentCount;
-    private int dashMaxCount;
-
     private float dashCoolTimeCurrent;
-    private float dashCoolTimeMax;
 
     private float dashPlayTime;
     private float dashEndTime;
 
-    private int Speed;
     private int JumpPower;
     private float dashPower;
 
@@ -63,11 +73,10 @@ public class Player : MonoBehaviour
         isDash = false;
         isJump = false;
 
-        Speed = 5;
         JumpPower = 10;
         dashPower = 50;
 
-        //playerState.instance.p_state.settingState(1, 80, 80, 2, 2, 0.2f, 50, 5);
+        playerState.instance.p_state.settingState(1, 80, 80, 2, 2, 0.2f, 50, 5);
 
         dashEndTime = 0.08f;
         dashPlayTime = 0.0f;
@@ -89,9 +98,6 @@ public class Player : MonoBehaviour
         isSlope = false;
 
         perpVelo = Vector2.zero;
-
-        dashMaxCount = 2;
-        dashCurrentCount = 0;
 
         Dir = new Vector2(gameObject.RectLocalPos().x, gameObject.RectLocalPos().y);
     }
@@ -222,7 +228,7 @@ public class Player : MonoBehaviour
         }
 
         //대쉬
-        if (Input.GetMouseButtonDown(1) && dashCurrentCount > 0)
+        if (Input.GetMouseButtonDown(1) && playerState.instance.p_state.currentDash > 0)
         {
             isRightClick = true;
         }
@@ -241,14 +247,14 @@ public class Player : MonoBehaviour
                 {
                     if (IsOnGround2() && !isJump && clamAngle < MaxAngle)
                     {
-                        perpVelo = perp * Speed;
+                        perpVelo = perp * playerState.instance.p_state.speed;
                         playerRB.gravityScale = Mathf.Abs(perpVelo.y);
 
                         playerRB.velocity = perpVelo;
                     }
                     else if(isJump)
                     {
-                        playerRB.velocity = new Vector2(-Speed, playerRB.velocity.y);
+                        playerRB.velocity = new Vector2(-playerState.instance.p_state.speed, playerRB.velocity.y);
                     }
                 }
                 else if(!isSlope)
@@ -257,11 +263,11 @@ public class Player : MonoBehaviour
 
                     if (IsOnGround() && !isJump) //평지
                     {
-                        playerRB.velocity = new Vector2(-Speed, 0);
+                        playerRB.velocity = new Vector2(-playerState.instance.p_state.speed, 0);
                     }
                     else if (!IsOnGround())
                     {
-                        playerRB.velocity = new Vector2(-Speed, playerRB.velocity.y);
+                        playerRB.velocity = new Vector2(-playerState.instance.p_state.speed, playerRB.velocity.y);
                     }
                 }
             }
@@ -274,14 +280,14 @@ public class Player : MonoBehaviour
                 {
                     if (IsOnGround2() && !isJump && clamAngle < MaxAngle)
                     {
-                        perpVelo = perp * -Speed;
+                        perpVelo = perp * -playerState.instance.p_state.speed;
                         playerRB.gravityScale = Mathf.Abs(perpVelo.y);
 
                         playerRB.velocity = perpVelo;
                     }
                     else if (isJump)
                     {
-                        playerRB.velocity = new Vector2(Speed, playerRB.velocity.y);
+                        playerRB.velocity = new Vector2(playerState.instance.p_state.speed, playerRB.velocity.y);
                     }
                 }
                 else if (!isSlope)
@@ -290,11 +296,11 @@ public class Player : MonoBehaviour
 
                     if (IsOnGround() && !isJump) //평지
                     {
-                        playerRB.velocity = new Vector2(Speed, 0);
+                        playerRB.velocity = new Vector2(playerState.instance.p_state.speed, 0);
                     }
                     else if (!IsOnGround())
                     {
-                        playerRB.velocity = new Vector2(Speed, playerRB.velocity.y);
+                        playerRB.velocity = new Vector2(playerState.instance.p_state.speed, playerRB.velocity.y);
                     }
                 }
             }
@@ -309,7 +315,7 @@ public class Player : MonoBehaviour
 
             dashEventTime = 0.02f;
             dashPlayTime = 0.0f;
-            dashCurrentCount -= 1;
+            playerState.instance.p_state.currentDash -= 1;
             playerRB.velocity = Vector2.zero;
             playerRB.gravityScale = 0.0f;
 
@@ -325,14 +331,14 @@ public class Player : MonoBehaviour
     public void Player_DashRunnig()
     {
         //대쉬 쿨타입 부분
-        if (dashCurrentCount != dashMaxCount)
+        if (playerState.instance.p_state.currentDash != playerState.instance.p_state.maxDash)
         {
             dashCoolTimeCurrent += Time.deltaTime;
 
-            if (dashCoolTimeMax < dashCoolTimeCurrent)
+            if (playerState.instance.p_state.cooltimeDash < dashCoolTimeCurrent)
             {
                 dashCoolTimeCurrent = 0.0f;
-                dashCurrentCount += 1;
+                playerState.instance.p_state.currentDash += 1;
             }
         }
 

@@ -70,4 +70,13 @@ public class State
         attack = attack_;
         speed = speed_;
     }
+
+    public void hitDamage(float damage_)
+    {
+        currentHP -= damage_;
+
+        if (currentHP < 0) currentHP = 0;
+
+        playerUI.instance.rebootbar();
+    }
 }
